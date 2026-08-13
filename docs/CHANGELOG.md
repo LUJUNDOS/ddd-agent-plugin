@@ -18,7 +18,7 @@
 
 ### 变更
 - README 覆盖模板占位（快速开始 / 开发命令 / 新增宿主步骤 / 知识剥离说明）。
-- `docs/04-tasks.md`：任务拆分 TASK-0001~0008（checkbox 格式对齐 check-tasks），全部实现并勾选。
+- `docs/04-tasks.md`：任务拆分 TASK-0001~0008（checkbox 格式对齐 check-tasks），全部实现并勾选；G3 验收通过后状态 → implemented。
 
 ### 修复
 - `generate.py` 占位符渲染：`string.Template` 不认 `{{}}`，改为显式替换（保持 03-design 字面一致）。
