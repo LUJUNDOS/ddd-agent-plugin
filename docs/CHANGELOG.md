@@ -31,6 +31,7 @@
 - 交付文档对齐 v0.2.1：README 特性表补"写码硬拦截"行、skill 数 13/纪律 7/references 4/用例 16/scripts 7 项；03-design 目录结构模板数 6→13；validations/run-4.md 验收记录。
 - `references/capability-registry.md` 打包（作为 manifest 补充说明文档，references 4→5）：头部注明"manifest 承担注册表角色、本文为中枢原文参考"。
 - `references/performance-optimization.md` 打包（技术参考层，references 5→6）：性能排查方法论，头部注明区别于流程/纪律类方法论。
+- v0.2.2：新增 `templates/evolution-scan.md`（扫描式自进化：扫描/提炼/晋升/退休 30 天规则，不改变 memory-protocol 记机制）；manifest skills 13→14；需求 FR-016/AC-10；03-design §16。
 
 ## [0.1.0] - 2026-08-13
 

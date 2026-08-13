@@ -58,8 +58,8 @@ class TestGenerate(unittest.TestCase):
                 base = os.path.join(d, host)
                 self.assertTrue(os.path.isdir(base))
                 skills = os.listdir(os.path.join(base, sub, "skills"))
-                # 13 个 skill 目录（bootstrap + 5 角色 + 7 纪律）
-                self.assertEqual(len(skills), 13)
+                # 14 个 skill 目录（bootstrap + 5 角色 + 7 纪律 + memory-protocol + evolution-scan）
+                self.assertEqual(len(skills), 14)
 
     def test_rendered_frontmatter(self):
         with tempfile.TemporaryDirectory() as d:
@@ -155,12 +155,12 @@ class TestManifest(unittest.TestCase):
     def test_manifest_schema(self):
         manifest = generate.load_manifest()
         self.assertEqual(manifest["id"], "ddd-agent-plugin")
-        self.assertEqual(len(manifest["skills"]), 13)
+        self.assertEqual(len(manifest["skills"]), 14)
         ids = [s["id"] for s in manifest["skills"]]
         self.assertEqual(
             sorted(ids),
-            ["architect", "bootstrap", "debug", "doc-driven", "gate",
-             "goal-creator", "memory-protocol", "no-fake-test", "pm",
+            ["architect", "bootstrap", "debug", "doc-driven", "evolution-scan",
+             "gate", "goal-creator", "memory-protocol", "no-fake-test", "pm",
              "product-manager", "review", "ui-designer", "verify"])
         self.assertIn("reasonix", manifest["hosts"])
         self.assertIn("claude", manifest["hosts"])

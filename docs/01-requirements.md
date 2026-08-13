@@ -39,6 +39,7 @@ related: [00-vision]
 | FR-013 | **DDD 流程角色 skill 链**：goal-creator → product-manager（00/01）→ architect（02）→ ui-designer（03）→ pm（04），各角色自动衔接闸门（G0 通过才写 02 等） | V | P0 |
 | FR-014 | **scaffold.py 骨架生成**：一键生成 docs/00-vision/01-requirements/02-architecture/03-design/04-tasks 空模板（frontmatter + 章节），自动化代替手动初始化 | A | P0 |
 | FR-015 | **references 打包**：角色 skill 依赖的方法论文档（adversarial-selection / pm-thinking-guide / code-review-standard）随插件分发，装到宿主后引用闭环（可拔插不依赖中枢） | V | P0 |
+| FR-016 | **扫描式自进化（evolution-scan）**：扫描宿主记忆中的 error/decision/insight → 提炼重复模式（≥3 次）→ 晋升宿主记忆长期区 → **退休规则**（长期区条目 30 天未触发 → 退休候选，用户确认后清理）；不改变 memory-protocol 的"记"机制 | V | P0 |
 
 ## 2. 非功能需求（NFR）
 
@@ -63,6 +64,7 @@ related: [00-vision]
 | AC-7 | 任一宿主装上后，ddd_gate 机械闸拦截生效（未 approved 写码被拦） | 模拟违规场景真机验证 |
 | AC-8 | 新建项目自动引导：装插件后对"新建项目"触发 bootstrap，自动生成 docs/00~04 骨架 + 引导需求调研启动 | 真机模拟"新建项目"流程 |
 | AC-9 | 角色 skill 链可用：product-manager 等 5 角色 skill 装进宿主后可被触发，references 引用闭环（无外部依赖断链） | 真机触发 + 引用路径检查 |
+| AC-10 | evolution-scan：扫描宿主记忆提炼重复模式（≥3 次晋升）、退休规则（30 天未触发 → 退休候选，须用户确认）、不改 memory-protocol | 真机模拟扫描/晋升/退休流程 |
 
 ## 4. MVP 边界
 
