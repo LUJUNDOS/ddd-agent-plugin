@@ -9,6 +9,7 @@
 - manifest version 0.2.0→0.2.2；04-tasks 补 TASK-0014~0016（v0.2.1/v0.2.2）；03-design §12 表补 evolution-scan 行。
 - memory-protocol 补 evolution-scan 串联引用（记→维护双向闭环）；README/03-design 数字对齐 14 skill。
 - AC-10 真机模拟通过（四类清单 / 用户确认闸 / 禁止重复 / 双向闭环）；validations/run-6.md 验收记录。
+- 交付检查补验：claude_gate_hook.py 行为验证（拦截 draft→exit 2 / 放行 approved→exit 0 / 边界放行）；references 6 份 hash 核对（4 IDENTICAL + 2 含头部说明，符合预期）。
 
 ## [0.2.1] - 2026-08-13
 
