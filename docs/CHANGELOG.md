@@ -1,5 +1,32 @@
 # CHANGELOG
 
+## [0.2.2] - 2026-08-13
+
+### 新增
+- `templates/evolution-scan.md`（长期区维护：退休 30 天规则 / 合并去重 / 冲突检测 / 跨项目提炼；晋升 ≥3 次归 memory-protocol，两 skill 分工无重复——修复初版"≥3 次重复"设计缺陷）；manifest skills 13→14；需求 FR-016/AC-10；03-design §16。
+
+### 变更
+- manifest version 0.2.0→0.2.2；04-tasks 补 TASK-0014~0016（v0.2.1/v0.2.2）；03-design §12 表补 evolution-scan 行。
+- memory-protocol 补 evolution-scan 串联引用（记→维护双向闭环）；README/03-design 数字对齐 14 skill。
+- AC-10 真机模拟通过（四类清单 / 用户确认闸 / 禁止重复 / 双向闭环）；validations/run-6.md 验收记录。
+
+## [0.2.1] - 2026-08-13
+
+### 新增（中枢同步审计修复）
+- 补 `debug` skill（纪律层 6/6：doc-driven/gate/verify/review/no-fake-test/debug，宿主无关化）。
+- 补 `references/doc-driven-dev.md`（DDD 详细规程打包，doc-driven skill 补引用）。
+- 补 `scripts/claude_gate_hook.py`（PreToolUse 硬拦截脚本）。
+- **hooks 自动挂载**：hosts layout 增 `hooks` 字段；install 合并写宿主 `settings.json`（保留原 hooks、先备份）；uninstall 恢复/删除；测试 TestHooks。
+- `references/capability-registry.md` 打包（manifest 补充说明，4→5）。
+- `references/performance-optimization.md` 打包（技术参考层，5→6）。
+
+### 变更
+- 移除 `.vscode/`（闸门任务封装为 `scripts/run-checks.py`）；`_template` 同步移除（源头治理）。
+- 分享前清理：移除模板无关脚本（douyin_resolver / extract_browser_cookies / transcribe / kb_lint / evolution_scan / claude_gate_hook）与中枢专属进化系统（docs/EVOLUTION.md + CLAUDE/CODEBUDDY §8 改"已移除"）。
+- 引用闭环修复：review/verify 补 `references/code-review-standard.md` 引用 + §7 适用边界。
+- goal-creator 去 Loop 契约残留（contract_id/loop_type/owner_role/contracts/），产物改为目标清单。
+- 交付文档对齐 v0.2.1：README 写码硬拦截行、13 skill/7 纪律/6 references；validations/run-4.md。
+
 ## [0.2.0] - 2026-08-13
 
 ### 新增（中枢同步）
@@ -8,32 +35,16 @@
 - 任务 TASK-0009~0013（`docs/04-tasks.md`）。
 - 实现：
   - `templates/bootstrap.md`：新建项目 DDD 自动引导（对齐中枢 new-project Step 9，宿主无关询问机制）。
-  - `templates/{goal-creator,product-manager,architect,ui-designer,pm}.md`：5 角色流程 skill（从中枢 `.workbuddy/skills/` 提取，宿主无关化：`methods/`→`references/`、去 `/goal`/`CLAUDE.md §` 引用、frontmatter 参数化）。
+  - `templates/{goal-creator,product-manager,architect,ui-designer,pm}.md`：5 角色流程 skill（从中枢 `.workbuddy/skills/` 提取，宿主无关化）。
   - `scripts/scaffold.py`：一键生成 docs/00~04 骨架（幂等，纯标准库）。
   - `references/`：打包 adversarial-selection / pm-thinking-guide / code-review-standard 3 份方法论。
   - `plugin.manifest.yaml`：skills 6→12、scripts +scaffold.py、references 声明；`generate.py` 纳入 references 拷贝。
   - `tests/test_plugin.py`：UT-5（scaffold 幂等）、UT-6（references 闭环），13 用例全绿。
 
 ### 修复（v0.2.0 真机验证发现）
-- `install.py`/`uninstall.py`：备份目录按宿主分文件（`.ddd-agent-plugin-backup-<host>`），修复多宿主 install 的 backup 互相覆盖导致卸载无法恢复（manifest 分宿主的同源遗漏；真机验证抓出）。
-- 回归测试：`TestMultiHostRoundtrip`（同 target 双宿主装→卸→全部恢复），14 用例全绿。
-- 任务 TASK-0009~0013 全部勾选（validations/run-3.md 验收记录）。
-- `README.md`：快速开始补"新建项目自动接入 DDD"用法（bootstrap + scaffold），目录结构与测试数更新至 v0.2.0。
-- 移除 `.vscode/`（不再在 VSCode 开发）：其闸门任务能力封装为 `scripts/run-checks.py`（一键全量检查）；`_template` 同步移除（源头治理，新项目不再带）。
-- 分享前清理（聚焦插件本体）：移除模板带来的无关脚本 `douyin_resolver.py` / `extract_browser_cookies.py` / `transcribe.py` / `kb_lint.py` / `claude_gate_hook.py` / `evolution_scan.py`；移除中枢专属的进化系统（`docs/EVOLUTION.md` + CLAUDE/CODEBUDDY §8 改为"已移除"说明，§7 记忆日志去除 evolution_scan 依赖）。
-- 引用闭环修复（交付检查发现）：`templates/review.md` 补 `references/code-review-standard.md` §2/§5 引用 + §7 适用边界；`templates/verify.md` 补 §3/§4 引用。
-- 中枢机制残留清理：`templates/goal-creator.md` 移除 Loop 契约残留（`contract_id`/`loop_type`/`owner_role`/`contracts/` 引用），产物改为目标清单本身（Step 3），确认后进入 product-manager 需求访谈（Step 4）。
-- 中枢同步审计修复（v0.2.1）：
-  - 补 `debug` skill（纪律层 6/6 补齐：doc-driven/gate/verify/review/no-fake-test/debug，宿主无关化）。
-  - 补 `references/doc-driven-dev.md`（DDD 详细规程打包，doc-driven skill 补引用）。
-  - 补 `scripts/claude_gate_hook.py`（PreToolUse 硬拦截脚本）。
-  - **hooks 自动挂载**：hosts layout 增 `hooks` 字段；install 合并写宿主 `settings.json`（保留原 hooks、先备份）；uninstall 恢复/删除；测试 TestHooks（16 用例全绿）。
-- 交付文档对齐 v0.2.1：README 特性表补"写码硬拦截"行、skill 数 13/纪律 7/references 4/用例 16/scripts 7 项；03-design 目录结构模板数 6→13；validations/run-4.md 验收记录。
-- `references/capability-registry.md` 打包（作为 manifest 补充说明文档，references 4→5）：头部注明"manifest 承担注册表角色、本文为中枢原文参考"。
-- `references/performance-optimization.md` 打包（技术参考层，references 5→6）：性能排查方法论，头部注明区别于流程/纪律类方法论。
-- v0.2.2：新增 `templates/evolution-scan.md`（长期区维护：退休 30 天规则/合并去重/冲突检测/跨项目提炼；晋升 ≥3 次归 memory-protocol，两 skill 分工无重复——修复初版"≥3 次重复"设计缺陷）；manifest skills 13→14；需求 FR-016/AC-10；03-design §16。
-- 交付收尾：README/03-design 数字对齐 14 skill；memory-protocol 补 evolution-scan 串联引用（记→维护双向闭环）；validations/run-6.md 验收记录。
-- 交付收尾（二）：manifest version 0.2.0→0.2.2；04-tasks 补 TASK-0014~0016（v0.2.1/v0.2.2）；03-design §12 表补 evolution-scan 行；AC-10 真机模拟通过（四类清单/用户确认闸/禁止重复/双向闭环）。
+- `install.py`/`uninstall.py`：备份目录按宿主分文件（`.ddd-agent-plugin-backup-<host>`），修复多宿主 install 的 backup 互相覆盖（真机验证抓出）。
+- 回归测试：`TestMultiHostRoundtrip`（双宿主装→卸→全部恢复），14 用例全绿。
+- 任务 TASK-0009~0013 全部勾选（validations/run-3.md）；README 快速开始补 bootstrap/scaffold 用法。
 
 ## [0.1.0] - 2026-08-13
 
@@ -53,10 +64,10 @@
 
 ### 变更
 - README 覆盖模板占位（快速开始 / 开发命令 / 新增宿主步骤 / 知识剥离说明）。
-- `docs/04-tasks.md`：任务拆分 TASK-0001~0008（checkbox 格式对齐 check-tasks），全部实现并勾选；G3 验收通过后状态 → implemented。
+- `docs/04-tasks.md`：任务拆分 TASK-0001~0008，全部实现并勾选；G3 验收通过后状态 → implemented。
 
 ### 修复
-- `generate.py` 占位符渲染：`string.Template` 不认 `{{}}`，改为显式替换（保持 03-design 字面一致）。
+- `generate.py` 占位符渲染：`string.Template` 不认 `{{}}`，改为显式替换。
 - `install.py` 复制路径：保留顶层目录名（`.reasonix`），备份/卸载路径统一相对 target。
-- `install.py`/`uninstall.py`：卸载清单按宿主分文件（`.ddd-agent-plugin-manifest-<host>.json`），修复多宿主安装互相覆盖清单（真机验证发现）。
+- `install.py`/`uninstall.py`：卸载清单按宿主分文件（`.ddd-agent-plugin-manifest-<host>.json`），修复多宿主互相覆盖（真机验证发现）。
 - `uninstall.py`：空目录清理改为先收集再自底向上删除，修复 `.reasonix` 空目录残留（真机验证发现）。
