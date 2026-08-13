@@ -106,6 +106,7 @@ description: 文档驱动闸门：写码前校验 G0~G3 文档链闭合
 | review | Done 前独立 reviewer PASS；自述完成无效 |
 | no-fake-test | 同义反复/反向断言/只测顺路径/mock 被测物/静默跳过 → FAIL |
 | memory-protocol | 何时记（错误复盘/决策/经验）/ 记什么（[schema §6]）/ 如何回溯（会话开头读宿主记忆）；落点=宿主原生记忆，**插件不建 kb** |
+| evolution-scan | 长期区维护：退休（30 天未触发 → 用户确认清理）/ 合并去重 / 冲突检测 / 跨项目提炼；晋升归 memory-protocol |
 
 ## 6. 记忆规程 Schema（memory-protocol 核心）
 

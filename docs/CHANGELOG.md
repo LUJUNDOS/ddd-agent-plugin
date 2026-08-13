@@ -33,6 +33,7 @@
 - `references/performance-optimization.md` 打包（技术参考层，references 5→6）：性能排查方法论，头部注明区别于流程/纪律类方法论。
 - v0.2.2：新增 `templates/evolution-scan.md`（长期区维护：退休 30 天规则/合并去重/冲突检测/跨项目提炼；晋升 ≥3 次归 memory-protocol，两 skill 分工无重复——修复初版"≥3 次重复"设计缺陷）；manifest skills 13→14；需求 FR-016/AC-10；03-design §16。
 - 交付收尾：README/03-design 数字对齐 14 skill；memory-protocol 补 evolution-scan 串联引用（记→维护双向闭环）；validations/run-6.md 验收记录。
+- 交付收尾（二）：manifest version 0.2.0→0.2.2；04-tasks 补 TASK-0014~0016（v0.2.1/v0.2.2）；03-design §12 表补 evolution-scan 行；AC-10 真机模拟通过（四类清单/用户确认闸/禁止重复/双向闭环）。
 
 ## [0.1.0] - 2026-08-13
 

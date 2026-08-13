@@ -43,7 +43,6 @@ related: [03-design]
   - **DoD**：README 覆盖 AC-5 用户路径；CHANGELOG 有记录（check-changelog 通过）；ddd_gate.py 在 dist 镜像内。
 
 ## v0.2.0（中枢同步：新建项目 DDD 自动引导 + 角色 skill 链，FR-012~015）
-
 - [x] **TASK-0009** references/ 打包（FR-015）
   - **内容**：复制中枢 `methods/{adversarial-selection,pm-thinking-guide,code-review-standard}.md` 到 `references/`；生成器将其纳入 dist 镜像。
   - **DoD**：3 份文件存在；generate 后 dist/<host>/references/ 含 3 份（UT 断言）。
@@ -63,3 +62,19 @@ related: [03-design]
 - [x] **TASK-0013** manifest 更新 + 测试扩展 + 收口
   - **内容**：manifest skills 6→12、scripts +scaffold.py、references 声明；tests 加 UT-5（scaffold 幂等）/UT-6（references 打包）；README/CHANGELOG 更新。
   - **DoD**：generate 全量通过；drift 0 差异；测试全绿；真机模拟"新建项目"引导（AC-8）与角色 skill 引用可达（AC-9）。
+
+## v0.2.1（中枢同步审计修复：debug + doc-driven-dev + hooks，FR-015 扩展）
+
+- [x] **TASK-0014** debug skill + doc-driven-dev 打包
+  - **内容**：提取中枢 debug skill（宿主无关化）→ templates/debug.md；doc-driven-dev.md 进 references/；manifest skills 12→13。
+  - **DoD**：纪律层 6/6；references 4 份；测试断言更新。
+
+- [x] **TASK-0015** hooks 自动挂载
+  - **内容**：hosts layout 增 hooks 字段；install 合并写宿主 settings.json（保留原 hooks/先备份）；uninstall 恢复/删除；claude_gate_hook.py 加回 scripts/。
+  - **DoD**：TestHooks 双场景（保留原 hook/创建-删除）；卸载后 settings.json 与安装前一致。
+
+## v0.2.2（自进化：evolution-scan，FR-016/AC-10）
+
+- [x] **TASK-0016** evolution-scan skill
+  - **内容**：templates/evolution-scan.md（长期区维护：退休 30 天/合并去重/冲突检测/跨项目提炼；去初版 ≥3 次重复，晋升归 memory-protocol）；manifest skills 13→14。
+  - **DoD**：镜像 14 skill 渲染正确（无 ≥3 次提炼逻辑残留）；memory-protocol ↔ evolution-scan 双向引用；AC-10 真机模拟。
