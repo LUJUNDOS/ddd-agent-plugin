@@ -7,12 +7,13 @@
 | 特性 | 说明 |
 |------|------|
 | 🔌 可拔插 | `install.py` 一键装 / `uninstall.py` 一键卸（卸载后宿主与安装前逐字节一致） |
+| 🛡️ 写码硬拦截 | hooks 自动挂载：装后宿主 `PreToolUse` hook 生效（Claude Code / Reasonix 均支持，exit 2 拦未 approved 写码），卸后 settings.json 恢复 |
 | 🧩 任意宿主 | 单一源 manifest + 生成器：MVP 已验证 reasonix + claude，其余宿主加一段 layout 即可 |
 | 🆕 自动引导 | `bootstrap` skill：新建项目自动生成 docs/00~04 骨架 + 引导需求调研，直接走 DDD 流程（自动代替手动） |
 | 👥 角色流程链 | `goal-creator` → `product-manager`（00/01）→ `architect`（02 四维调研+对抗选型）→ `ui-designer`（03）→ `pm`（04），闸门自动衔接 |
-| 📐 DDD 方法论 | 6 个纪律 skill：`doc-driven`（闸门）/ `gate`（结构闸）/ `verify`（行为真证）/ `review`（收口）/ `no-fake-test`（测试真实性）+ 机械闸 |
+| 📐 DDD 方法论 | 7 个纪律 skill：`doc-driven`（闸门）/ `gate`（结构闸）/ `verify`（行为真证）/ `review`（收口）/ `no-fake-test`（测试真实性）/ `debug`（调试纪律）+ 机械闸 |
 | 🧠 知识剥离 | 插件不携带任何 kb 内容；`memory-protocol` skill 约定"何时记/记什么/如何回溯"，经验写入宿主原生记忆（Reasonix memory / CLAUDE.md） |
-| 📚 自带方法论 | `references/` 打包 3 份方法论文档（法庭式对抗 / PM 思考 / 代码审查标准），装到宿主后引用闭环 |
+| 📚 自带方法论 | `references/` 打包 4 份方法论文档（法庭式对抗 / PM 思考 / 代码审查标准 / DDD 详细规程），装到宿主后引用闭环 |
 
 ## 快速开始
 
@@ -41,7 +42,7 @@ python scripts/run-checks.py                 # 一键全量检查（gates+check-
 python scripts/generate.py                    # 重新生成全部宿主镜像
 python scripts/drift_check.py                 # 一致性校验（0=一致 / 1=漂移）
 python scripts/scaffold.py --target <项目根>   # 生成 DDD 文档骨架（docs/00~04，幂等）
-python tests\test_plugin.py                   # 单元测试（14 用例）
+python tests\test_plugin.py                   # 单元测试（16 用例）
 python scripts/ddd_gate.py gates docs         # DDD 闸门链
 python scripts/ddd_gate.py check-tasks docs   # 任务勾选核对
 ```
@@ -50,11 +51,11 @@ python scripts/ddd_gate.py check-tasks docs   # 任务勾选核对
 
 ```
 plugin.manifest.yaml      单一源：元数据 + skill 清单（12）+ 宿主声明 + references
-templates/                12 份宿主无关 skill 正文（bootstrap/5 角色/6 纪律，{{SKILL_NAME}} 占位符）
-references/               3 份方法论（法庭式对抗 / PM 思考 / 代码审查标准，随镜像分发）
+templates/                13 份宿主无关 skill 正文（bootstrap/5 角色/7 纪律，{{SKILL_NAME}} 占位符）L_NAME}} 占位符）
+references/               4 份方法论（法庭式对抗 / PM 思考 / 代码审查标准 / DDD 详细规程，随镜像分发）
 hosts/<host>/layout.json  per-host 适配（目录布局 + frontmatter 规则）
-scripts/                  generate / drift_check / install / uninstall / scaffold / ddd_gate
-tests/                    单元测试（14 用例，纯标准库 unittest）
+scripts/                  generate / drift_check / install / uninstall / scaffold / ddd_gate / claude_gate_hook / scaffold / ddd_gate
+tests/                    单元测试（16 用例，纯标准库 unittest）
 docs/                     本项目自身 DDD 文档链（00~04 + research/）
 dist/                     生成产物（不入库）
 ```

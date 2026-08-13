@@ -14,7 +14,7 @@ related: [02-architecture]
 ```
 ddd-agent-plugin/
 ├── plugin.manifest.yaml        # 单一源：元数据 + skill 清单 + 宿主声明
-├── templates/                  # 宿主无关 skill 正文（6 份）
+├── templates/                  # 宿主无关 skill 正文（13 份）
 │   ├── doc-driven.md
 │   ├── gate.md
 │   ├── verify.md
