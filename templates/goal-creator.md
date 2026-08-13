@@ -15,7 +15,7 @@ user-invocable: true
 ## 输入
 
 1. 用户当前对话中的意图描述
-2. 项目状态：读 项目规则文件（`CLAUDE.md`/`CODEBUDDY.md`/`AGENTS.md` 视宿主）了解 DDD 文档链状态、现有 `contracts/` 下的契约 ID 范围
+2. 项目状态：读 项目规则文件（`CLAUDE.md`/`CODEBUDDY.md`/`AGENTS.md` 视宿主）了解 DDD 文档链状态、docs/ 各层当前 status（00~04 已 approved 到哪一层）
 3. 相关 docs：视需要读 `docs/00-vision.md`、`docs/01-requirements.md` 了解模块边界和已有需求
 
 ## 流程
@@ -39,46 +39,33 @@ user-invocable: true
 - 示例（坏的）：`[ ] 登录功能正常 —— 验证：手动测试`  ← 不可接受
 - 示例（坏的）：`[ ] 代码质量良好 —— 验证：code review`  ← 不可接受
 
-### Step 3：生成契约 YAML
+### Step 3：生成目标清单
 
-按 `references/loop-engineer.md` 的契约结构组装：
+> 本插件已剥离 Loop 契约机制（`C-*/T-*` 属中枢专属，见 docs/00-vision 非目标）。goal-creator 的产物即 Step 1 的目标条目清单本身，无需契约 YAML。
 
-- `contract_id`：读 `contracts/` 目录取下一个可用编号（`C-<NNNN>`）
-- `type`：`single`（单任务）/ `workflow`（多任务编排）
-- `trigger`：`goal`
-- `loop_type`：`convergent`（写码/修 bug）/ `exploratory`（调研/方案比对）
-- `boundary`：只写真实约束，不写"保持代码整洁""写充分注释"等废话
+- 目标清单 = Step 1 的目标条目 + Step 2 的机械验证，逐条可自证。
+- 每项目标标注验收证据类型：跑命令 / 查文件 / 逐项打勾。
 
 ### Step 4：请用户确认
 
-展示完整目标，等用户确认后再写入 `contracts/`。
+展示完整目标清单，等用户确认后再进入需求层：确认后启动 `product-manager` 角色，将目标展开为 `docs/00-vision.md` 与 `docs/01-requirements.md`（DDD G0 文档链）。
 
 **不自行触发目标建立流程。** goal-creator 只负责标准化目标文本，执行由用户手动触发目标建立或编排代理接手。
 
 ## 输出格式
 
 ```markdown
----
-contract_id: C-<NNNN>
-title: <一句话标题>
-type: single
-trigger: goal
-loop_type: convergent
-references: []
-status: idle
-priority: P0
-owner_role: orchestrator
----
 ## Goal
 <一句话目标描述>
+
+## 目标条目（逐条可自证）
+- [ ] <标准 1> —— 验证：`command` → 期望输出
+- [ ] <标准 2> —— 验证：检查 `file_path` 包含 `content`
+- [ ] <标准 3> —— 验证：逐项打勾/查文件
 
 ## Boundary
 - <真实约束 1>
 - <真实约束 2>
-
-## DoD
-- [ ] <标准 1> —— 验证：`command` → 期望输出
-- [ ] <标准 2> —— 验证：检查 `file_path` 包含 `content`
 ```
 
 **总字符数 ≤ 4000。**
@@ -88,6 +75,6 @@ owner_role: orchestrator
 - [ ] 每条 DoD 有具体的机械验证方法（命令/文件检查/输出对比）？
 - [ ] 没有"代码整洁""充分测试""体验好"等无法机械验证的废话？
 - [ ] Boundary 只写了真实约束，没写通用好习惯？
-- [ ] `contract_id` 不与 `contracts/` 已有契约冲突？
+- [ ] 目标清单与 DDD 文档链（docs/00~04）一致，无冲突？
 - [ ] 总字符数 ≤ 4000？
-- [ ] 用户已确认？（未确认不写入 contracts/）
+- [ ] 用户已确认？（未确认不进入 product-manager 需求访谈）

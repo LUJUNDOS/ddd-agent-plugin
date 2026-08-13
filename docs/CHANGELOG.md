@@ -21,6 +21,8 @@
 - `README.md`：快速开始补"新建项目自动接入 DDD"用法（bootstrap + scaffold），目录结构与测试数更新至 v0.2.0。
 - 移除 `.vscode/`（不再在 VSCode 开发）：其闸门任务能力封装为 `scripts/run-checks.py`（一键全量检查）；`_template` 同步移除（源头治理，新项目不再带）。
 - 分享前清理（聚焦插件本体）：移除模板带来的无关脚本 `douyin_resolver.py` / `extract_browser_cookies.py` / `transcribe.py` / `kb_lint.py` / `claude_gate_hook.py` / `evolution_scan.py`；移除中枢专属的进化系统（`docs/EVOLUTION.md` + CLAUDE/CODEBUDDY §8 改为"已移除"说明，§7 记忆日志去除 evolution_scan 依赖）。
+- 引用闭环修复（交付检查发现）：`templates/review.md` 补 `references/code-review-standard.md` §2/§5 引用 + §7 适用边界；`templates/verify.md` 补 §3/§4 引用。
+- 中枢机制残留清理：`templates/goal-creator.md` 移除 Loop 契约残留（`contract_id`/`loop_type`/`owner_role`/`contracts/` 引用），产物改为目标清单本身（Step 3），确认后进入 product-manager 需求访谈（Step 4）。
 
 ## [0.1.0] - 2026-08-13
 
