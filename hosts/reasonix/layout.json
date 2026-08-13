@@ -7,5 +7,12 @@
     "description_field": "description",
     "extra_fields": []
   },
-  "notes": "Reasonix 从项目 .reasonix/skills/<name>/SKILL.md 发现技能（frontmatter name/description 索引）"
+  "hooks": {
+    "settings_file": ".reasonix/settings.json",
+    "pre_tool_use": {
+      "matcher": "Edit|Write|NotebookEdit",
+      "command": "python ${workspaceFolder}/scripts/claude_gate_hook.py"
+    }
+  },
+  "notes": "Reasonix 从项目 .reasonix/skills/<name>/SKILL.md 发现技能；hooks 从 .reasonix/settings.json 自动加载（PreToolUse 为 blocking 事件，exit 2 拦截写码）"
 }

@@ -131,7 +131,45 @@ def main(argv=None):
             shutil.copy2(sp, tp)
             copied.append(relp)
 
-    # 4) 写安装清单（按宿主分文件，避免多宿主互相覆盖）
+    # 4) hooks 挂载：合并写宿主 settings.json（备份原内容，卸载时恢复）
+    hooks_state = None  # {"settings_file", "existed", "original"}
+    hook_cfg = layout.get("hooks")
+    if hook_cfg:
+        settings_path = os.path.join(target, hook_cfg["settings_file"])
+        existed = os.path.isfile(settings_path)
+        original = None
+        merged = {}
+        if existed:
+            with open(settings_path, "r", encoding="utf-8") as f:
+                original = f.read()
+            try:
+                merged = json.loads(original)
+            except json.JSONDecodeError:
+                merged = {}
+        hooks = merged.setdefault("hooks", {})
+        entries = hooks.setdefault("PreToolUse", [])
+        # 追加插件条目（matcher 已存在则跳过，避免重复挂载）
+        new_entry = {
+            "matcher": hook_cfg["pre_tool_use"]["matcher"],
+            "hooks": [{"type": "command",
+                       "command": hook_cfg["pre_tool_use"]["command"]}],
+        }
+        if not any(e.get("matcher") == new_entry["matcher"] for e in entries):
+            entries.append(new_entry)
+        # 先备份原 settings.json（供 uninstall 恢复），再写入合并版
+        if existed:
+            bdir = os.path.join(backup_dir, os.path.dirname(hook_cfg["settings_file"]))
+            os.makedirs(bdir, exist_ok=True)
+            shutil.copy2(settings_path, os.path.join(bdir, os.path.basename(hook_cfg["settings_file"])))
+        with open(settings_path, "w", encoding="utf-8") as f:
+            json.dump(merged, f, ensure_ascii=False, indent=2)
+        hooks_state = {
+            "settings_file": hook_cfg["settings_file"],
+            "existed": existed,
+            "original": original,
+        }
+
+    # 5) 写安装清单（按宿主分文件，避免多宿主互相覆盖）
     installed = {
         "host": args.host,
         "base_dir": layout["base_dir"],
@@ -139,6 +177,7 @@ def main(argv=None):
         "files": sorted(copied),
         "backed_up": sorted(backed_up),
         "snapshot": snapshot,
+        "hooks": hooks_state,
         "installed_at": __import__("datetime").datetime.now().isoformat(timespec="seconds"),
     }
     mpath = os.path.join(target, manifest_name(args.host))
@@ -147,6 +186,7 @@ def main(argv=None):
 
     print(f"install: {args.host} -> {target}")
     print(f"  files: {len(copied)}，backed_up: {len(backed_up)}")
+    print(f"  hooks: {('merged -> ' + hook_cfg['settings_file']) if hook_cfg else 'none'}")
     print(f"  manifest: {os.path.basename(mpath)}")
     sys.exit(0)
 

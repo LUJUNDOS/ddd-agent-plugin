@@ -7,5 +7,12 @@
     "description_field": "description",
     "extra_fields": []
   },
-  "notes": "Claude Code 从项目 .claude/skills/<name>/SKILL.md 发现技能（frontmatter name/description 索引，description 决定自动触发）"
+  "hooks": {
+    "settings_file": ".claude/settings.json",
+    "pre_tool_use": {
+      "matcher": "Edit|Write|NotebookEdit",
+      "command": "python ${workspaceFolder}/scripts/claude_gate_hook.py"
+    }
+  },
+  "notes": "Claude Code 从项目 .claude/skills/<name>/SKILL.md 发现技能；hooks 从 .claude/settings.json 加载（PreToolUse exit 2 拦截写码）"
 }

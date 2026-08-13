@@ -39,6 +39,9 @@ skills:
   - id: no-fake-test
     title: 测试真实性闸
     description: "测试真实性闸：禁止假测试（同义反复/反向断言/只测顺路径/mock 被测物/静默跳过）。"
+  - id: debug
+    title: 调试纪律
+    description: "调试纪律：假设≤3、每次失败记录被否假设与原因、3 连败即停升级重审，禁止盲目第 4 次试错。"
   - id: memory-protocol
     title: 记忆规程
     description: "知识库剥离的记忆规程：何时记（error/decision/insight）、记什么 schema、如何回溯；沉淀到宿主原生记忆，插件不建 kb。"
@@ -59,7 +62,9 @@ scripts:
   - scripts/ddd_gate.py
   - scripts/drift_check.py
   - scripts/scaffold.py
+  - scripts/claude_gate_hook.py
 references:
   - references/adversarial-selection.md
   - references/pm-thinking-guide.md
   - references/code-review-standard.md
+  - references/doc-driven-dev.md

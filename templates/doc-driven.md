@@ -22,3 +22,4 @@ description: {{SKILL_DESC}}
 ## 纪律
 - 文档是契约不是负担；设计变更须回写 03-design 再改码。
 - 与 gate 纪律串联：doc-driven 管"能否写"，gate 管"写完好不好"。
+- 详细规程（ADR 模板 / glossary / TDD 默认反馈环 / 文档 frontmatter 规范）见 `references/doc-driven-dev.md`。

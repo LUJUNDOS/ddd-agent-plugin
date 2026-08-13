@@ -68,6 +68,24 @@ def main(argv=None):
             shutil.copy2(bp, dp)
             restored.append(relp)
 
+    # 2.5) hooks 恢复：settings.json 还原为安装前状态
+    hooks_restored = False
+    hook_state = record.get("hooks")
+    if hook_state:
+        settings_path = os.path.join(target, hook_state["settings_file"])
+        if hook_state["existed"]:
+            # 从备份恢复原 settings.json（保留宿主原有 hooks/其他配置）
+            bp = os.path.join(backup_dir, hook_state["settings_file"])
+            if os.path.isfile(bp):
+                os.makedirs(os.path.dirname(settings_path), exist_ok=True)
+                shutil.copy2(bp, settings_path)
+                hooks_restored = True
+        else:
+            # 原本不存在 → 删除插件创建的
+            if os.path.isfile(settings_path):
+                os.remove(settings_path)
+                hooks_restored = True
+
     # 3) 清理空目录 + manifest + backup
     #    先收集全部目录再自底向上删除（避免遍历中删除导致遗漏）
     all_dirs = []
@@ -96,6 +114,8 @@ def main(argv=None):
 
     print(f"uninstall: {args.host} <- {target}")
     print(f"  deleted: {len(deleted)}，missing(已不存在): {len(missing)}，restored: {len(restored)}")
+    if hook_state:
+        print(f"  hooks: settings.json {'restored' if hooks_restored else '无变化'}")
     print(f"  快照校验通过 ✓（宿主 skill 目录已恢复原状）")
     sys.exit(0)
 

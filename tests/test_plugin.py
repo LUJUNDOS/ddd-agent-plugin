@@ -58,8 +58,8 @@ class TestGenerate(unittest.TestCase):
                 base = os.path.join(d, host)
                 self.assertTrue(os.path.isdir(base))
                 skills = os.listdir(os.path.join(base, sub, "skills"))
-                # 12 个 skill 目录（bootstrap + 5 角色 + 6 纪律）
-                self.assertEqual(len(skills), 12)
+                # 13 个 skill 目录（bootstrap + 5 角色 + 7 纪律）
+                self.assertEqual(len(skills), 13)
 
     def test_rendered_frontmatter(self):
         with tempfile.TemporaryDirectory() as d:
@@ -155,13 +155,13 @@ class TestManifest(unittest.TestCase):
     def test_manifest_schema(self):
         manifest = generate.load_manifest()
         self.assertEqual(manifest["id"], "ddd-agent-plugin")
-        self.assertEqual(len(manifest["skills"]), 12)
+        self.assertEqual(len(manifest["skills"]), 13)
         ids = [s["id"] for s in manifest["skills"]]
         self.assertEqual(
             sorted(ids),
-            ["architect", "bootstrap", "doc-driven", "gate", "goal-creator",
-             "memory-protocol", "no-fake-test", "pm", "product-manager",
-             "review", "ui-designer", "verify"])
+            ["architect", "bootstrap", "debug", "doc-driven", "gate",
+             "goal-creator", "memory-protocol", "no-fake-test", "pm",
+             "product-manager", "review", "ui-designer", "verify"])
         self.assertIn("reasonix", manifest["hosts"])
         self.assertIn("claude", manifest["hosts"])
         self.assertEqual(manifest["hosts"]["reasonix"]["status"], "verified")
@@ -209,6 +209,7 @@ class TestReferences(unittest.TestCase):
             self.assertIn("adversarial-selection.md", refs)
             self.assertIn("pm-thinking-guide.md", refs)
             self.assertIn("code-review-standard.md", refs)
+            self.assertIn("doc-driven-dev.md", refs)
 
     def test_role_skill_refs_resolve(self):
         """角色 skill 内 `references/X.md` 引用在镜像中可达（闭环）。"""
@@ -288,6 +289,48 @@ class TestMultiHostRoundtrip(unittest.TestCase):
             self.assertEqual(
                 [x for x in os.listdir(host_root)
                  if x.startswith(".ddd-agent-plugin")], [])
+
+
+class TestHooks(unittest.TestCase):
+    """hooks 自动挂载：合并保留原 hooks / 无 settings 时创建删除（AC-5 扩展）"""
+
+    def test_merge_keeps_existing_hooks(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            host_root = os.path.join(tmp, "host")
+            os.makedirs(os.path.join(host_root, ".reasonix"))
+            orig = {"hooks": {"PreToolUse": [
+                {"matcher": "Bash",
+                 "hooks": [{"type": "command", "command": "echo hi"}]}]}}
+            sp = os.path.join(host_root, ".reasonix", "settings.json")
+            with open(sp, "w", encoding="utf-8") as f:
+                json.dump(orig, f)
+            with self.assertRaises(SystemExit):
+                install.main(["--host", "reasonix", "--target", host_root])
+            with open(sp, encoding="utf-8") as f:
+                merged = json.load(f)
+            matchers = [e["matcher"] for e in merged["hooks"]["PreToolUse"]]
+            self.assertIn("Bash", matchers)                      # 原 hook 保留
+            self.assertIn("Edit|Write|NotebookEdit", matchers)   # 插件 hook 追加
+            # 卸载后恢复原状
+            with self.assertRaises(SystemExit):
+                uninstall.main(["--host", "reasonix", "--target", host_root])
+            with open(sp, encoding="utf-8") as f:
+                self.assertEqual(json.load(f), orig)
+
+    def test_create_and_remove_settings(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            host_root = os.path.join(tmp, "host")
+            os.makedirs(os.path.join(host_root, ".reasonix"))
+            sp = os.path.join(host_root, ".reasonix", "settings.json")
+            with self.assertRaises(SystemExit):
+                install.main(["--host", "reasonix", "--target", host_root])
+            self.assertTrue(os.path.isfile(sp))
+            with open(sp, encoding="utf-8") as f:
+                self.assertIn("Edit|Write|NotebookEdit",
+                              json.dumps(json.load(f)))
+            with self.assertRaises(SystemExit):
+                uninstall.main(["--host", "reasonix", "--target", host_root])
+            self.assertFalse(os.path.isfile(sp))  # 原本不存在 → 删除
 
 
 if __name__ == "__main__":

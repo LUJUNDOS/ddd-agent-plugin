@@ -190,9 +190,18 @@ claude 宿主：    <proj>/.claude/skills/{doc-driven,gate,verify,review,no-fake
 
 ## 13. v0.2.0 —— references 打包（FR-015）
 
-- `references/` 目录：从中枢 `methods/` 复制 `adversarial-selection.md`、`pm-thinking-guide.md`、`code-review-standard.md`
+- `references/` 目录：从中枢 `methods/` 复制 `adversarial-selection.md`、`pm-thinking-guide.md`、`code-review-standard.md`、`doc-driven-dev.md`（4 份）
 - 生成器将其拷贝进 dist/<host>/references/，角色 skill 内引用路径改为 `references/<file>`（相对宿主项目）
 - 验收：装到宿主后 references 文件存在，角色 skill 内引用路径可达（AC-9）
+
+## 15. v0.2.1 —— hooks 自动挂载（PreToolUse 硬拦截）
+
+- **背景**：Claude Code 与 Reasonix 均支持 `PreToolUse` blocking hook（exit 2 拦截写码）；Codex 有 hooks.json。硬拦截层为各宿主共有能力。
+- **设计**：
+  - `hosts/<host>/layout.json` 新增 `hooks` 字段：`settings_file`（如 `.reasonix/settings.json`）+ `pre_tool_use`（matcher + command 指向 `scripts/claude_gate_hook.py`）
+  - `install.py`：合并写宿主 `settings.json` 的 `hooks.PreToolUse`（保留宿主原有 hooks，matcher 已存在则跳过）；先备份原 settings.json 再写；manifest 记录 hooks 状态
+  - `uninstall.py`：原存在 → 从备份恢复；原本不存在 → 删除插件创建的
+- **验收**：安装后宿主 settings.json 含插件 PreToolUse 且原 hooks 保留；卸载后 settings.json 与安装前一致（TestHooks）
 
 ## 14. v0.2.0 —— scaffold.py 接口（FR-014）
 
