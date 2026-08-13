@@ -18,6 +18,7 @@
 - `install.py`/`uninstall.py`：备份目录按宿主分文件（`.ddd-agent-plugin-backup-<host>`），修复多宿主 install 的 backup 互相覆盖导致卸载无法恢复（manifest 分宿主的同源遗漏；真机验证抓出）。
 - 回归测试：`TestMultiHostRoundtrip`（同 target 双宿主装→卸→全部恢复），14 用例全绿。
 - 任务 TASK-0009~0013 全部勾选（validations/run-3.md 验收记录）。
+- `README.md`：快速开始补"新建项目自动接入 DDD"用法（bootstrap + scaffold），目录结构与测试数更新至 v0.2.0。
 
 ## [0.1.0] - 2026-08-13
 

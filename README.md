@@ -24,7 +24,13 @@ python scripts/generate.py
 python scripts/install.py --host reasonix --target <你的项目目录>
 python scripts/install.py --host claude   --target <你的项目目录>
 
-# 3. 卸载（宿主恢复原状）
+# 3. 新建项目自动接入 DDD（bootstrap）
+#    装好后对 agent 说："新建一个项目 <name>" → 自动生成 docs/00~04 骨架
+#    → 引导是否启动需求调研 → 选"现在启动"即当场进入 product-manager 需求访谈
+#    也可手动生成骨架：
+python scripts/scaffold.py --target <新项目目录>
+
+# 4. 卸载（宿主恢复原状）
 python scripts/uninstall.py --host reasonix --target <你的项目目录>
 ```
 
@@ -33,7 +39,8 @@ python scripts/uninstall.py --host reasonix --target <你的项目目录>
 ```powershell
 python scripts/generate.py                    # 重新生成全部宿主镜像
 python scripts/drift_check.py                 # 一致性校验（0=一致 / 1=漂移）
-python tests\test_plugin.py                   # 单元测试（9 用例）
+python scripts/scaffold.py --target <项目根>   # 生成 DDD 文档骨架（docs/00~04，幂等）
+python tests\test_plugin.py                   # 单元测试（14 用例）
 python scripts/ddd_gate.py gates docs         # DDD 闸门链
 python scripts/ddd_gate.py check-tasks docs   # 任务勾选核对
 ```
@@ -41,11 +48,12 @@ python scripts/ddd_gate.py check-tasks docs   # 任务勾选核对
 ## 目录结构
 
 ```
-plugin.manifest.yaml      单一源：元数据 + skill 清单 + 宿主声明
-templates/                6 份宿主无关 skill 正文（{{SKILL_NAME}} 占位符）
+plugin.manifest.yaml      单一源：元数据 + skill 清单（12）+ 宿主声明 + references
+templates/                12 份宿主无关 skill 正文（bootstrap/5 角色/6 纪律，{{SKILL_NAME}} 占位符）
+references/               3 份方法论（法庭式对抗 / PM 思考 / 代码审查标准，随镜像分发）
 hosts/<host>/layout.json  per-host 适配（目录布局 + frontmatter 规则）
-scripts/                  generate / drift_check / install / uninstall / ddd_gate
-tests/                    单元测试（UT-1~4，纯标准库 unittest）
+scripts/                  generate / drift_check / install / uninstall / scaffold / ddd_gate
+tests/                    单元测试（14 用例，纯标准库 unittest）
 docs/                     本项目自身 DDD 文档链（00~04 + research/）
 dist/                     生成产物（不入库）
 ```
