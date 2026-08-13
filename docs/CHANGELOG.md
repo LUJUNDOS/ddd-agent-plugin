@@ -28,6 +28,7 @@
   - 补 `references/doc-driven-dev.md`（DDD 详细规程打包，doc-driven skill 补引用）。
   - 补 `scripts/claude_gate_hook.py`（PreToolUse 硬拦截脚本）。
   - **hooks 自动挂载**：hosts layout 增 `hooks` 字段；install 合并写宿主 `settings.json`（保留原 hooks、先备份）；uninstall 恢复/删除；测试 TestHooks（16 用例全绿）。
+- 交付文档对齐 v0.2.1：README 特性表补"写码硬拦截"行、skill 数 13/纪律 7/references 4/用例 16/scripts 7 项；03-design 目录结构模板数 6→13；validations/run-4.md 验收记录。
 
 ## [0.1.0] - 2026-08-13
 
