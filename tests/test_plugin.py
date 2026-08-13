@@ -211,6 +211,7 @@ class TestReferences(unittest.TestCase):
             self.assertIn("code-review-standard.md", refs)
             self.assertIn("doc-driven-dev.md", refs)
             self.assertIn("capability-registry.md", refs)
+            self.assertIn("performance-optimization.md", refs)
 
     def test_role_skill_refs_resolve(self):
         """角色 skill 内 `references/X.md` 引用在镜像中可达（闭环）。"""

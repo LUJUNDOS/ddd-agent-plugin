@@ -190,7 +190,7 @@ claude 宿主：    <proj>/.claude/skills/{doc-driven,gate,verify,review,no-fake
 
 ## 13. v0.2.0 —— references 打包（FR-015）
 
-- `references/` 目录：从中枢 `methods/` 复制 `adversarial-selection.md`、`pm-thinking-guide.md`、`code-review-standard.md`、`doc-driven-dev.md`、`capability-registry.md`（5 份，后者作为 manifest 的补充说明文档打包）
+- `references/` 目录：从中枢 `methods/` 复制 `adversarial-selection.md`、`pm-thinking-guide.md`、`code-review-standard.md`、`doc-driven-dev.md`、`capability-registry.md`、`performance-optimization.md`（6 份；后两者分别为 manifest 补充说明与技术参考层）
 - 生成器将其拷贝进 dist/<host>/references/，角色 skill 内引用路径改为 `references/<file>`（相对宿主项目）
 - 验收：装到宿主后 references 文件存在，角色 skill 内引用路径可达（AC-9）
 
