@@ -1,0 +1,11 @@
+{
+  "base_dir": ".claude/skills",
+  "skill_dir": "<skill-id>",
+  "skill_file": "SKILL.md",
+  "frontmatter": {
+    "name_field": "name",
+    "description_field": "description",
+    "extra_fields": []
+  },
+  "notes": "Claude Code 从项目 .claude/skills/<name>/SKILL.md 发现技能（frontmatter name/description 索引，description 决定自动触发）"
+}

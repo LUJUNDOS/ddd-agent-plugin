@@ -1,128 +1,89 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-drift_check.py —— 文档/代码漂移检测（启发式 v1，对应定稿计划 §1.3 harness / 守护型 Housekeeper）
+drift_check.py —— 镜像一致性校验（03-design §8 / FR-003）
 
-v1 启发式（语义漂移留 agent，脚本只做机械信号）：
-  - 对每个 docs/*.md 读取 frontmatter status 与文件 mtime。
-  - status == implemented：期望 src/ 下存在比该文档「新」的源码（代码已随文档落地）。
-      若 src/ 整体不存在、或 src/ 下最新文件比该文档还旧 → 标记 drift（文档称已实现，但代码未更新）。
-  - status in {approved} 但 src/ 为空且存在 implemented 兄弟文档 → 不报（实现中正常）。
-  - docs 比 src 最新文件还新（文档改在设计冻结后）→ 标记 warning（可能需重建/回归）。
+重新从单一源生成，与 dist/<host>/ 现有镜像逐文件对比。
+退出码：0 = 一致；1 = 存在漂移（供 hook/CI 拦截）。
 
-产出：<report_dir>/drift_report-<YYYYMMDD>.json。退出码 0 = 无 drift；1 = 有 drift。
-纯标准库实现。
+用法：
+  python scripts/drift_check.py [--host <name|all>] [--out dist]
 """
 import argparse
-import json
+import filecmp
 import os
-import re
+import shutil
 import sys
-from datetime import datetime
+import tempfile
 
-VALID_STATUS = {"draft", "review", "approved", "implemented", "deprecated"}
+import generate  # 复用单一源生成逻辑（同目录）
+
+ROOT = generate.ROOT
 
 
-def parse_frontmatter(path):
+def compare_trees(left, right):
+    """返回差异文件相对路径列表（left 为基准）。"""
+    diffs = []
+    for dirpath, dirnames, filenames in os.walk(left):
+        rel = os.path.relpath(dirpath, left)
+        other = os.path.join(right, rel)
+        for fn in sorted(filenames):
+            lp = os.path.join(dirpath, fn)
+            rp = os.path.join(other, fn)
+            if not os.path.isfile(rp) or not filecmp.cmp(lp, rp, shallow=False):
+                diffs.append(os.path.relpath(lp, left))
+    # right 侧多出的文件
+    for dirpath, dirnames, filenames in os.walk(right):
+        rel = os.path.relpath(dirpath, right)
+        other = os.path.join(left, rel)
+        for fn in sorted(filenames):
+            lp = os.path.join(other, fn)
+            if not os.path.isfile(lp):
+                diffs.append(f"[extra] {os.path.join(rel, fn)}")
+    return diffs
+
+
+def check_host(manifest, host, out_dir):
+    tmp = tempfile.mkdtemp(prefix="drift-")
     try:
-        text = open(path, "r", encoding="utf-8").read()
-    except OSError:
-        return {}
-    if not text.startswith("---"):
-        return {}
-    m = re.match(r"^---\s*\n(.*?)\n---\s*\n?", text, re.DOTALL)
-    if not m:
-        return {}
-    data = {}
-    for line in m.group(1).splitlines():
-        mm = re.match(r"^\s*([A-Za-z0-9_\-]+)\s*:\s*(.*)$", line)
-        if mm:
-            data[mm.group(1)] = mm.group(2).strip().strip('"').strip("'")
-    return data
-
-
-def newest_mtime(path):
-    newest = 0.0
-    if not os.path.isdir(path):
-        return newest
-    for dp, _, fns in os.walk(path):
-        for fn in fns:
-            try:
-                newest = max(newest, os.path.getmtime(os.path.join(dp, fn)))
-            except OSError:
-                pass
-    return newest
+        generate.generate_host(manifest, host, tmp)
+        # 重新生成的镜像根（generate 输出 tmp/<host>/ 结构与 dist/<host>/ 对齐）
+        fresh = os.path.join(tmp, host)
+        current = os.path.join(out_dir, host)
+        if not os.path.isdir(current):
+            return [f"[missing] {host} 镜像不存在，请先运行 generate.py"]
+        diffs = compare_trees(fresh, current)
+        return [f"{host}: {d}" for d in diffs]
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
 
 
 def main():
-    ap = argparse.ArgumentParser(description="文档/代码漂移检测 v1")
-    ap.add_argument("docs_dir")
-    ap.add_argument("--src-dir", default=None, help="源码目录（默认 <docs_dir>/../src）")
-    ap.add_argument("--report-dir", default=None, help="report 输出目录（默认 docs_dir/../logs 或 cwd）")
+    ap = argparse.ArgumentParser(description="镜像一致性校验")
+    ap.add_argument("--host", default="all", help="reasonix|claude|all（默认 all）")
+    ap.add_argument("--out", default="dist", help="镜像目录（默认 dist）")
     args = ap.parse_args()
 
-    docs_dir = os.path.normpath(args.docs_dir)
-    src_dir = os.path.normpath(args.src_dir) if args.src_dir else os.path.normpath(os.path.join(docs_dir, "..", "src"))
-    report_dir = args.report_dir or (os.path.dirname(docs_dir) or ".")
-    os.makedirs(report_dir, exist_ok=True)
+    manifest = generate.load_manifest()
+    host_names = [h for h, c in manifest["hosts"].items() if c.get("layout")]
+    if args.host != "all":
+        if args.host not in manifest["hosts"]:
+            print(f"[FAIL] 未知宿主: {args.host}")
+            sys.exit(1)
+        host_names = [args.host]
+    out_dir = os.path.join(ROOT, args.out)
 
-    date = datetime.now().strftime("%Y%m%d")
-    report_path = os.path.join(report_dir, f"drift_report-{date}.json")
+    all_diffs = []
+    for host in host_names:
+        all_diffs.extend(check_host(manifest, host, out_dir))
 
-    findings = []
-    if os.path.isdir(docs_dir):
-        for fn in sorted(os.listdir(docs_dir)):
-            if not fn.endswith(".md"):
-                continue
-            fp = os.path.join(docs_dir, fn)
-            fm = parse_frontmatter(fp)
-            status = fm.get("status", "draft")
-            if status not in ("approved", "implemented"):
-                continue
-            doc_mtime = os.path.getmtime(fp)
-            src_newest = newest_mtime(src_dir)
-            entry = {
-                "doc": fn,
-                "status": status,
-                "doc_mtime": datetime.fromtimestamp(doc_mtime).isoformat(timespec="seconds"),
-                "src_newest_mtime": (datetime.fromtimestamp(src_newest).isoformat(timespec="seconds") if src_newest else None),
-                "drift": False,
-                "reason": "",
-            }
-            if status == "implemented":
-                if src_newest == 0.0:
-                    entry["drift"] = True
-                    entry["reason"] = "status=implemented 但 src/ 无文件（代码未落地）"
-                elif src_newest < doc_mtime:
-                    entry["drift"] = True
-                    entry["reason"] = "status=implemented 但 src/ 最新文件比文档旧（文档改后代码未重建）"
-                else:
-                    entry["reason"] = "代码已随文档更新"
-            else:  # approved
-                if src_newest > doc_mtime:
-                    entry["reason"] = "代码比文档新（可能已实现但未置 implemented）"
-            findings.append(entry)
-
-    drift_count = sum(1 for f in findings if f["drift"])
-    report = {
-        "generated_at": datetime.now().isoformat(timespec="seconds"),
-        "docs_dir": docs_dir,
-        "src_dir": src_dir,
-        "checked": len(findings),
-        "drift_count": drift_count,
-        "findings": findings,
-    }
-    with open(report_path, "w", encoding="utf-8") as f:
-        json.dump(report, f, ensure_ascii=False, indent=2)
-
-    print(f"# drift_check.py v1 @ {report['generated_at']}")
-    print(f"检查文档: {len(findings)}  漂移: {drift_count}")
-    for f in findings:
-        tag = "DRIFT" if f["drift"] else "ok"
-        print(f"  [{tag}] {f['doc']} ({f['status']}) — {f['reason']}")
-    print(f"report → {report_path}")
-    print(f"\n# 结果：{'DRIFT DETECTED' if drift_count else 'NO DRIFT ✓'}")
-    sys.exit(1 if drift_count else 0)
+    if all_diffs:
+        print(f"# drift_check: {len(all_diffs)} 处漂移 ✗")
+        for d in all_diffs:
+            print(f"  [DIFF] {d}")
+        sys.exit(1)
+    print(f"# drift_check: {host_names} 一致 ✓（0 差异）")
+    sys.exit(0)
 
 
 if __name__ == "__main__":

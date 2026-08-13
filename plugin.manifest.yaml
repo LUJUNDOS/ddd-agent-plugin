@@ -1,0 +1,42 @@
+# ddd-agent-plugin —— 单一源 manifest（03-design §2）
+# 规则真源：docs/03-design.md（approved）。改动须走 DDD 流程。
+id: ddd-agent-plugin
+name: DDD Agent Plugin
+version: 0.1.0
+license: MIT
+description: "DDD 方法论可拔插 agent 插件：5 个纪律 skill + 记忆规程 + 机械闸。装上=任何 agent 获得 G0~G3 闸门纪律；拔下=宿主无残留；经验自进化沉淀在宿主原生记忆。"
+skills:
+  - id: doc-driven
+    title: 文档驱动闸门
+    description: "文档驱动闸门：写码前校验 G0~G3 文档链闭合；03-design 未 approved 禁止写实现文件。"
+  - id: gate
+    title: 结构闸
+    description: "提交前自检：跑 ddd_gate（文档链）+ drift_check（不变量），任一非零即拦截。"
+  - id: verify
+    title: 行为真证
+    description: "隔离验证纪律：生产者与验证者分离，验证者独立上下文对照 DoD 核查真实输出。"
+  - id: review
+    title: 收口审查
+    description: "门禁覆盖：Done 前须独立 reviewer 对照 DoD 判 PASS，自述完成无效。"
+  - id: no-fake-test
+    title: 测试真实性闸
+    description: "测试真实性闸：禁止假测试（同义反复/反向断言/只测顺路径/mock 被测物/静默跳过）。"
+  - id: memory-protocol
+    title: 记忆规程
+    description: "知识库剥离的记忆规程：何时记（error/decision/insight）、记什么 schema、如何回溯；沉淀到宿主原生记忆，插件不建 kb。"
+hosts:
+  reasonix:
+    status: verified
+    layout: hosts/reasonix/layout.json
+  claude:
+    status: verified
+    layout: hosts/claude/layout.json
+  codebuddy:
+    status: planned
+  codex:
+    status: planned
+  cursor:
+    status: planned
+scripts:
+  - scripts/ddd_gate.py
+  - scripts/drift_check.py

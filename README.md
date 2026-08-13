@@ -1,21 +1,67 @@
-# <项目名> —— 项目脚手架（复制自 Projects_dev/projects/_template）
+# ddd-agent-plugin —— DDD 方法论可拔插 Agent 插件
 
-本目录是从中枢 `_template` 复制的新项目骨架。源码在 `src/`，文档在 `docs/`（DDD Source of Truth），执行日志在 `tasks/logs/`，运行时契约在 `contracts/`（`/goal` 按需生成），验证证据在 `validations/`。共享契约模板在根目录 `contracts/_templates/`。
+> 以 `Projects_dev` 中枢为蓝本的可拔插 Skill Plugin：**装上 = 任何 agent 获得 DDD G0~G3 闸门纪律；拔下 = 宿主无残留；经验自进化沉淀在宿主原生记忆（插件零知识库负担）。**
 
-## 目录
-| 路径 | 作用 |
+## 特性
+
+| 特性 | 说明 |
 |------|------|
-| `src/` | 源码（执行代理经 git worktree 隔离写码） |
-| `docs/` | DDD 五层事实链 00~04（比代码权威） |
-| `tasks/` | 下层任务 `T-<id>.md` + `logs/` |
-| `contracts/` | 运行时 Loop 契约 `C-<id>.md`（`/goal` 按需生成；默认模板在根目录 `contracts/_templates/`） |
-| `validations/` | 验证器证据（PR 评论/Checks） |
-| `scripts/` | harness：`ddd_gate.py` `kb_lint.py` `drift_check.py` |
-| `.vscode/` | VS Code 任务/扩展（跑闸门+测试） |
-| `.claude/` `.codebuddy/` | Claude Code / CodeBuddy 双 Agent 入口 |
+| 🔌 可拔插 | `install.py` 一键装 / `uninstall.py` 一键卸（卸载后宿主与安装前逐字节一致） |
+| 🧩 任意宿主 | 单一源 manifest + 生成器：MVP 已验证 reasonix + claude，其余宿主加一段 layout 即可 |
+| 📐 DDD 方法论 | 5 个纪律 skill：`doc-driven`（闸门）/ `gate`（结构闸）/ `verify`（行为真证）/ `review`（收口）/ `no-fake-test`（测试真实性） |
+| 🧠 知识剥离 | 插件不携带任何 kb 内容；`memory-protocol` skill 约定"何时记/记什么/如何回溯"，经验写入宿主原生记忆（Reasonix memory / CLAUDE.md） |
+| 🛡️ 机械闸 | 随插件分发 `ddd_gate.py`（纯 Python，宿主无关），非零即拦 |
 
-## 闸门
-写码前 `python scripts/ddd_gate.py check-module docs --module <path>`；commit 前 Hook 自动跑 `ddd_gate` pre-commit。
+## 快速开始
 
-## 命令（需中枢 ~/.workbuddy/skills 已装）
-`/goal` `/ingest` `/evolve` `/new-project`（本项目已存在，用 `/goal` 立目标）。
+```powershell
+# 1. 生成镜像（dist/<host>/）
+python scripts/generate.py
+
+# 2. 安装到宿主项目（装到 <target>/.reasonix/skills/ 或 <target>/.claude/skills/）
+python scripts/install.py --host reasonix --target <你的项目目录>
+python scripts/install.py --host claude   --target <你的项目目录>
+
+# 3. 卸载（宿主恢复原状）
+python scripts/uninstall.py --host reasonix --target <你的项目目录>
+```
+
+## 开发命令
+
+```powershell
+python scripts/generate.py                    # 重新生成全部宿主镜像
+python scripts/drift_check.py                 # 一致性校验（0=一致 / 1=漂移）
+python tests\test_plugin.py                   # 单元测试（9 用例）
+python scripts/ddd_gate.py gates docs         # DDD 闸门链
+python scripts/ddd_gate.py check-tasks docs   # 任务勾选核对
+```
+
+## 目录结构
+
+```
+plugin.manifest.yaml      单一源：元数据 + skill 清单 + 宿主声明
+templates/                6 份宿主无关 skill 正文（{{SKILL_NAME}} 占位符）
+hosts/<host>/layout.json  per-host 适配（目录布局 + frontmatter 规则）
+scripts/                  generate / drift_check / install / uninstall / ddd_gate
+tests/                    单元测试（UT-1~4，纯标准库 unittest）
+docs/                     本项目自身 DDD 文档链（00~04 + research/）
+dist/                     生成产物（不入库）
+```
+
+## 新增宿主（P1 扩展）
+
+1. 建 `hosts/<name>/layout.json`（参照 `hosts/claude/layout.json`：base_dir / skill_dir / skill_file / frontmatter）
+2. `plugin.manifest.yaml` 的 `hosts` 加条目：`<name>: { status: verified, layout: hosts/<name>/layout.json }`
+3. 真机验证（AC-2/3 铁律：一个宿主过了不能替另一个背书）
+
+## 知识剥离说明（AD-0002）
+
+插件**不建 kb、不存经验**。动态经验（错误复盘/决策/洞察）按 `memory-protocol` skill 的 schema 写入宿主原生记忆：
+- Reasonix → memory 工具 / 伴生 memory.md
+- Claude Code → CLAUDE.md 追加 + memory/ 目录
+
+拔掉插件不带走经验（特性），装上插件即恢复规程。
+
+## 许可
+
+MIT。以 `Projects_dev` 蓝本纪律 skill 内容为基准（AD-0004），结构对齐社区 SDD 插件范式（`docs/research/competitors.md`）。
