@@ -37,6 +37,7 @@ max_iter 轮数上限 / Token 预算上限 / 停滞检测（连续 N 轮 delta=0
 - 密钥/产物绝不入库（见 .gitignore）。
 - 写码前先 `check-module`；commit 前 Hook 跑 `ddd_gate` pre-commit 硬拦（含 CHANGELOG mtime 拦截 + TASK 勾选 WARNING）。
 - **TASK 勾选检查**：`ddd_gate.py check-tasks docs` 扫 04-tasks.md 未勾选 TASK，在 `validations/`、`contracts/C-*.md`（status=done）、`tasks/logs/` 中搜验证证据，有证据但未勾选 → WARNING。集成在 `gates --strict` 和 `pre-commit` 中。
+- **手动机械闸速查（原 `.vscode/tasks.json` 已删除，命令封装为脚本）**：一键全量检查 `python scripts/run-checks.py`（依次跑 ddd_gate gates/check-tasks/check-changelog + drift_check + 单元测试，任一失败 exit 1）；单独执行：闸门链 `python scripts/ddd_gate.py gates docs --strict`、镜像一致性 `python scripts/drift_check.py`、单元测试 `python tests/test_plugin.py`、骨架生成 `python scripts/scaffold.py --target <项目根>`。
 - **路径约定**：`kb/raw/`、`kb/wiki/`、`methods/`、`logs/` 均指**工作区根目录**（含 `AGENTS.md` 的目录）下的路径，**不是项目级目录**。项目级不设 `kb/` 目录。`/ingest` 写入的 raw 文件必须落到工作区根 `kb/raw/<bucket>/`，不得写到 `projects/<proj>/kb/raw/`。
 - **记忆日志（MUST）**：每次实质工作（写码/修 bug/重构/技术决策）后，向上找到工作区根目录（含 `AGENTS.md` 的目录）的 `.workbuddy/memory/`，追加一条简短记录到当天文件 `YYYY-MM-DD.md`（不存在则创建）。内容：改了什么 / 为什么 / 遇到什么坑。这是 `evolution_scan.py` 的数据源——不写 = 进化系统看不到。
 
