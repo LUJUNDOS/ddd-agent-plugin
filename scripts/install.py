@@ -21,11 +21,15 @@ import generate
 
 ROOT = generate.ROOT
 MANIFEST_PREFIX = ".ddd-agent-plugin-manifest"
-BACKUP_DIR = ".ddd-agent-plugin-backup"
+BACKUP_PREFIX = ".ddd-agent-plugin-backup"
 
 
 def manifest_name(host):
     return f"{MANIFEST_PREFIX}-{host}.json"
+
+
+def backup_dir_name(host):
+    return f"{BACKUP_PREFIX}-{host}"
 
 
 def _sha256(path):
@@ -42,8 +46,8 @@ def _snapshot(base_dir):
     if not os.path.isdir(base_dir):
         return snap
     for dirpath, dirnames, filenames in os.walk(base_dir):
-        if BACKUP_DIR in dirnames:
-            dirnames.remove(BACKUP_DIR)
+        if BACKUP_PREFIX in dirnames:
+            dirnames.remove(BACKUP_PREFIX)
         # 排除所有本插件清单变体（manifest 在宿主根，不在 skills 下；此处兜底）
         filenames = [fn for fn in filenames if not fn.startswith(MANIFEST_PREFIX)]
         for fn in filenames:
@@ -106,7 +110,7 @@ def main(argv=None):
     snapshot = _snapshot(base_dir)
 
     # 3) 复制（跳过 layout.json 元数据；保留顶层目录名如 .reasonix）
-    backup_dir = os.path.join(target, BACKUP_DIR)
+    backup_dir = os.path.join(target, backup_dir_name(args.host))
     shutil.rmtree(backup_dir, ignore_errors=True)
     copied, backed_up = [], []
     for entry in os.listdir(src):

@@ -8,9 +8,11 @@
 |------|------|
 | 🔌 可拔插 | `install.py` 一键装 / `uninstall.py` 一键卸（卸载后宿主与安装前逐字节一致） |
 | 🧩 任意宿主 | 单一源 manifest + 生成器：MVP 已验证 reasonix + claude，其余宿主加一段 layout 即可 |
-| 📐 DDD 方法论 | 5 个纪律 skill：`doc-driven`（闸门）/ `gate`（结构闸）/ `verify`（行为真证）/ `review`（收口）/ `no-fake-test`（测试真实性） |
+| 🆕 自动引导 | `bootstrap` skill：新建项目自动生成 docs/00~04 骨架 + 引导需求调研，直接走 DDD 流程（自动代替手动） |
+| 👥 角色流程链 | `goal-creator` → `product-manager`（00/01）→ `architect`（02 四维调研+对抗选型）→ `ui-designer`（03）→ `pm`（04），闸门自动衔接 |
+| 📐 DDD 方法论 | 6 个纪律 skill：`doc-driven`（闸门）/ `gate`（结构闸）/ `verify`（行为真证）/ `review`（收口）/ `no-fake-test`（测试真实性）+ 机械闸 |
 | 🧠 知识剥离 | 插件不携带任何 kb 内容；`memory-protocol` skill 约定"何时记/记什么/如何回溯"，经验写入宿主原生记忆（Reasonix memory / CLAUDE.md） |
-| 🛡️ 机械闸 | 随插件分发 `ddd_gate.py`（纯 Python，宿主无关），非零即拦 |
+| 📚 自带方法论 | `references/` 打包 3 份方法论文档（法庭式对抗 / PM 思考 / 代码审查标准），装到宿主后引用闭环 |
 
 ## 快速开始
 

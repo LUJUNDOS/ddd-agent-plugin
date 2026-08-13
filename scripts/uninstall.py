@@ -19,11 +19,15 @@ import sys
 import install
 
 MANIFEST_PREFIX = install.MANIFEST_PREFIX
-BACKUP_DIR = install.BACKUP_DIR
+BACKUP_PREFIX = install.BACKUP_PREFIX
 
 
 def manifest_name(host):
     return f"{MANIFEST_PREFIX}-{host}.json"
+
+
+def backup_dir_name(host):
+    return f"{BACKUP_PREFIX}-{host}"
 
 
 def main(argv=None):
@@ -54,7 +58,7 @@ def main(argv=None):
             missing.append(relp)
 
     # 2) 恢复被覆盖文件
-    backup_dir = os.path.join(target, BACKUP_DIR)
+    backup_dir = os.path.join(target, backup_dir_name(args.host))
     restored = []
     for relp in record["backed_up"]:
         bp = os.path.join(backup_dir, relp)

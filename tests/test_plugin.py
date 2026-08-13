@@ -13,6 +13,7 @@ UT-4 包内无 kb：生成产物与单一源均不含 kb/ 内容（AC-4）
 import filecmp
 import json
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -57,8 +58,8 @@ class TestGenerate(unittest.TestCase):
                 base = os.path.join(d, host)
                 self.assertTrue(os.path.isdir(base))
                 skills = os.listdir(os.path.join(base, sub, "skills"))
-                # 6 个 skill 目录
-                self.assertEqual(len(skills), 6)
+                # 12 个 skill 目录（bootstrap + 5 角色 + 6 纪律）
+                self.assertEqual(len(skills), 12)
 
     def test_rendered_frontmatter(self):
         with tempfile.TemporaryDirectory() as d:
@@ -154,12 +155,13 @@ class TestManifest(unittest.TestCase):
     def test_manifest_schema(self):
         manifest = generate.load_manifest()
         self.assertEqual(manifest["id"], "ddd-agent-plugin")
-        self.assertEqual(len(manifest["skills"]), 6)
+        self.assertEqual(len(manifest["skills"]), 12)
         ids = [s["id"] for s in manifest["skills"]]
         self.assertEqual(
             sorted(ids),
-            ["doc-driven", "gate", "memory-protocol",
-             "no-fake-test", "review", "verify"])
+            ["architect", "bootstrap", "doc-driven", "gate", "goal-creator",
+             "memory-protocol", "no-fake-test", "pm", "product-manager",
+             "review", "ui-designer", "verify"])
         self.assertIn("reasonix", manifest["hosts"])
         self.assertIn("claude", manifest["hosts"])
         self.assertEqual(manifest["hosts"]["reasonix"]["status"], "verified")
@@ -168,6 +170,124 @@ class TestManifest(unittest.TestCase):
             self.assertTrue(os.path.isfile(
                 os.path.join(ROOT, "templates", sid + ".md")),
                 f"缺模板 templates/{sid}.md")
+
+
+class TestScaffold(unittest.TestCase):
+    """UT-5 scaffold 骨架生成（FR-014/AC-8 支撑）"""
+
+    def test_scaffold_creates_five_docs(self):
+        import scaffold
+        with tempfile.TemporaryDirectory() as tmp:
+            created, skipped = scaffold.scaffold(tmp)
+            self.assertEqual(len(created), 5)
+            self.assertEqual(len(skipped), 0)
+            for name in ("00-vision", "01-requirements", "02-architecture",
+                         "03-design", "04-tasks"):
+                self.assertTrue(os.path.isfile(
+                    os.path.join(tmp, "docs", name + ".md")))
+            # frontmatter 合法（含 status: draft）
+            with open(os.path.join(tmp, "docs", "00-vision.md"),
+                      encoding="utf-8") as f:
+                self.assertIn("status: draft", f.read(120))
+
+    def test_scaffold_idempotent(self):
+        import scaffold
+        with tempfile.TemporaryDirectory() as tmp:
+            scaffold.scaffold(tmp)
+            created, skipped = scaffold.scaffold(tmp)
+            self.assertEqual(len(created), 0)
+            self.assertEqual(len(skipped), 5)
+
+
+class TestReferences(unittest.TestCase):
+    """UT-6 references 打包 + 角色 skill 引用闭环（FR-015/AC-9）"""
+
+    def test_references_in_mirror(self):
+        with tempfile.TemporaryDirectory() as d:
+            _generate_once("reasonix", d)
+            refs = os.listdir(os.path.join(d, "reasonix", "references"))
+            self.assertIn("adversarial-selection.md", refs)
+            self.assertIn("pm-thinking-guide.md", refs)
+            self.assertIn("code-review-standard.md", refs)
+
+    def test_role_skill_refs_resolve(self):
+        """角色 skill 内 `references/X.md` 引用在镜像中可达（闭环）。"""
+        with tempfile.TemporaryDirectory() as d:
+            for host, sub in (("reasonix", ".reasonix"), ("claude", ".claude")):
+                _generate_once(host, d)
+                base = os.path.join(d, host)
+                for role in ("product-manager", "architect"):
+                    sp = os.path.join(base, sub, "skills", role, "SKILL.md")
+                    with open(sp, encoding="utf-8") as f:
+                        content = f.read()
+                    for m in re.findall(r"references/([\w\-\.]+)", content):
+                        self.assertTrue(
+                            os.path.isfile(os.path.join(base, "references", m)),
+                            f"{host}/{role} 引用 references/{m} 但文件缺失")
+
+
+class TestMultiHostRoundtrip(unittest.TestCase):
+    """回归：多宿主 install 的 backup 互相覆盖（v0.2.0 真机发现）
+    场景：同 target 装 reasonix + claude → 依次卸载 → 宿主文件全部恢复。"""
+
+    def _make_host(self, tmp):
+        host_root = os.path.join(tmp, "host")
+        # reasonix 既有 skill
+        r = os.path.join(host_root, ".reasonix", "skills", "doc-driven")
+        os.makedirs(r, exist_ok=True)
+        with open(os.path.join(r, "SKILL.md"), "w", encoding="utf-8") as f:
+            f.write("R-ORIGINAL")
+        # claude 既有 skill
+        c = os.path.join(host_root, ".claude", "skills", "doc-driven")
+        os.makedirs(c, exist_ok=True)
+        with open(os.path.join(c, "SKILL.md"), "w", encoding="utf-8") as f:
+            f.write("C-ORIGINAL")
+        # 宿主已有 ddd_gate.py（模拟项目自带机械闸）
+        sdir = os.path.join(host_root, "scripts")
+        os.makedirs(sdir, exist_ok=True)
+        with open(os.path.join(sdir, "ddd_gate.py"), "w", encoding="utf-8") as f:
+            f.write("# HOST GATE VERSION")
+        return host_root
+
+    def test_multi_host_roundtrip(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            host_root = self._make_host(tmp)
+            for host in ("reasonix", "claude"):
+                with self.assertRaises(SystemExit) as ctx:
+                    install.main(["--host", host, "--target", host_root])
+                self.assertEqual(ctx.exception.code, 0)
+            # 后装的 claude 不应破坏 reasonix 的备份目录
+            self.assertTrue(os.path.isdir(os.path.join(
+                host_root, install.backup_dir_name("reasonix"))))
+            self.assertTrue(os.path.isdir(os.path.join(
+                host_root, install.backup_dir_name("claude"))))
+            # 依次卸载
+            for host in ("claude", "reasonix"):
+                with self.assertRaises(SystemExit) as ctx:
+                    uninstall.main(["--host", host, "--target", host_root])
+                self.assertEqual(ctx.exception.code, 0)
+            # 全部恢复
+            with open(os.path.join(host_root, ".reasonix", "skills",
+                                   "doc-driven", "SKILL.md"), encoding="utf-8") as f:
+                self.assertEqual(f.read(), "R-ORIGINAL")
+            with open(os.path.join(host_root, ".claude", "skills",
+                                   "doc-driven", "SKILL.md"), encoding="utf-8") as f:
+                self.assertEqual(f.read(), "C-ORIGINAL")
+            with open(os.path.join(host_root, "scripts", "ddd_gate.py"),
+                      encoding="utf-8") as f:
+                self.assertEqual(f.read(), "# HOST GATE VERSION")
+            # 零残留：宿主只保留原有文件（插件 skill 全部清除）
+            self.assertEqual(
+                os.listdir(os.path.join(host_root, ".reasonix", "skills")),
+                ["doc-driven"])
+            self.assertEqual(
+                os.listdir(os.path.join(host_root, ".claude", "skills")),
+                ["doc-driven"])
+            self.assertEqual(os.listdir(os.path.join(host_root, "scripts")),
+                             ["ddd_gate.py"])
+            self.assertEqual(
+                [x for x in os.listdir(host_root)
+                 if x.startswith(".ddd-agent-plugin")], [])
 
 
 if __name__ == "__main__":

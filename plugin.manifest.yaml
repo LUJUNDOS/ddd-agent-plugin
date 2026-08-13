@@ -2,10 +2,28 @@
 # 规则真源：docs/03-design.md（approved）。改动须走 DDD 流程。
 id: ddd-agent-plugin
 name: DDD Agent Plugin
-version: 0.1.0
+version: 0.2.0
 license: MIT
-description: "DDD 方法论可拔插 agent 插件：5 个纪律 skill + 记忆规程 + 机械闸。装上=任何 agent 获得 G0~G3 闸门纪律；拔下=宿主无残留；经验自进化沉淀在宿主原生记忆。"
+description: "DDD 方法论可拔插 agent 插件：新建项目自动引导 + 5 角色流程 skill + 6 纪律 skill + 机械闸。装上=任何 agent 获得 G0~G3 全流程；拔下=宿主无残留；经验自进化沉淀在宿主原生记忆。"
 skills:
+  - id: bootstrap
+    title: 新建项目 DDD 自动引导
+    description: "新建项目 DDD 自动引导：建项目自动生成 docs/00~04 骨架 + 询问是否启动需求调研 + 选后当场启动 product-manager，直接走流程。"
+  - id: goal-creator
+    title: 目标标准化
+    description: "把模糊的开发意图转换成可自证验收的 DDD 目标（每条 DoD 有机械验证方法）。"
+  - id: product-manager
+    title: 产品经理（需求层 00/01）
+    description: "DDD 产品经理角色：七阶段需求访谈，产出/修订 00-vision 和 01-requirements（FR-NNN 锚点）。"
+  - id: architect
+    title: 架构师（架构层 02）
+    description: "DDD 架构师角色：四维并行调研 + 法庭式对抗选型 + ADR 决策，产出 02-architecture（AD-NNN 锚点）。"
+  - id: ui-designer
+    title: UI 设计师（设计层 03）
+    description: "DDD UI 设计师角色：设计方案对话 + 产出/修订 03-design（COMP-NNN 视觉参数）。"
+  - id: pm
+    title: 项目经理（任务层 04）
+    description: "DDD 项目经理角色：基于 03-design 拆分 04-tasks（TASK-NNN + 并行组）。"
   - id: doc-driven
     title: 文档驱动闸门
     description: "文档驱动闸门：写码前校验 G0~G3 文档链闭合；03-design 未 approved 禁止写实现文件。"
@@ -40,3 +58,8 @@ hosts:
 scripts:
   - scripts/ddd_gate.py
   - scripts/drift_check.py
+  - scripts/scaffold.py
+references:
+  - references/adversarial-selection.md
+  - references/pm-thinking-guide.md
+  - references/code-review-standard.md

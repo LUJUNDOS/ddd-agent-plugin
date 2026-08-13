@@ -6,6 +6,18 @@
 - 需求 FR-012~015 + 验收 AC-8/9（`docs/01-requirements.md`）：新建项目 DDD 自动引导 / 角色 skill 链 / scaffold 骨架生成 / references 打包。
 - 设计（`docs/03-design.md` §11~14）：bootstrap skill 流程、5 角色 skill 规格、references 打包、scaffold.py 接口。
 - 任务 TASK-0009~0013（`docs/04-tasks.md`）。
+- 实现：
+  - `templates/bootstrap.md`：新建项目 DDD 自动引导（对齐中枢 new-project Step 9，宿主无关询问机制）。
+  - `templates/{goal-creator,product-manager,architect,ui-designer,pm}.md`：5 角色流程 skill（从中枢 `.workbuddy/skills/` 提取，宿主无关化：`methods/`→`references/`、去 `/goal`/`CLAUDE.md §` 引用、frontmatter 参数化）。
+  - `scripts/scaffold.py`：一键生成 docs/00~04 骨架（幂等，纯标准库）。
+  - `references/`：打包 adversarial-selection / pm-thinking-guide / code-review-standard 3 份方法论。
+  - `plugin.manifest.yaml`：skills 6→12、scripts +scaffold.py、references 声明；`generate.py` 纳入 references 拷贝。
+  - `tests/test_plugin.py`：UT-5（scaffold 幂等）、UT-6（references 闭环），13 用例全绿。
+
+### 修复（v0.2.0 真机验证发现）
+- `install.py`/`uninstall.py`：备份目录按宿主分文件（`.ddd-agent-plugin-backup-<host>`），修复多宿主 install 的 backup 互相覆盖导致卸载无法恢复（manifest 分宿主的同源遗漏；真机验证抓出）。
+- 回归测试：`TestMultiHostRoundtrip`（同 target 双宿主装→卸→全部恢复），14 用例全绿。
+- 任务 TASK-0009~0013 全部勾选（validations/run-3.md 验收记录）。
 
 ## [0.1.0] - 2026-08-13
 

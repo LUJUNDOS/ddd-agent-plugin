@@ -1,0 +1,93 @@
+---
+name: {{SKILL_NAME}}
+description: 把用户模糊的开发意图转换成可自证验收的 DDD 契约目标（≤4000 字，每条 DoD 有机械验证方法）。用于 goal → contract 的上游标准化环节。触发词：写 goal、生成 goal、创建 goal、帮我写个目标、把这个需求转成 goal、定义目标。
+user-invocable: true
+---
+
+# goal-creator — 模糊意图 → 可自证目标
+
+## 核心原则
+
+**目标不够自证，不进入目标建立流程。**
+每条完成标准必须能用机械方式验证——跑命令、看输出、查文件、逐项打勾。
+不许出现"代码清晰""测试充分""体验流畅"这种无法机械验证的标准。
+
+## 输入
+
+1. 用户当前对话中的意图描述
+2. 项目状态：读 项目规则文件（`CLAUDE.md`/`CODEBUDDY.md`/`AGENTS.md` 视宿主）了解 DDD 文档链状态、现有 `contracts/` 下的契约 ID 范围
+3. 相关 docs：视需要读 `docs/00-vision.md`、`docs/01-requirements.md` 了解模块边界和已有需求
+
+## 流程
+
+### Step 1：理解意图
+
+从用户描述中提取：
+- **做什么**（一句话，不含糊）
+- **为什么做**（背景/动机）
+- **约束条件**（真实的边界——平台限制、性能硬指标、依赖的外部服务。**不写**"代码整洁""注释完整"这类通用好习惯）
+
+如果信息不足以写出明确的"做什么"和"怎么算做完"，追问一轮（不超过 3 个问题）再继续。
+
+### Step 2：拆完成标准
+
+把"做什么"拆成可逐一验证的条目：
+
+- 每个条目必须有**具体的机械验证方法**
+- 验证方法格式：`## 验证：command → 期望输出` 或 `## 验证：检查 file_path 包含 content`
+- 示例（好的）：`[ ] 用户登录接口返回 JWT token —— 验证：curl -X POST /api/login -d '{"user":"test","pass":"test"}' → 响应含 "token" 字段且 jwt.io 可解码`
+- 示例（坏的）：`[ ] 登录功能正常 —— 验证：手动测试`  ← 不可接受
+- 示例（坏的）：`[ ] 代码质量良好 —— 验证：code review`  ← 不可接受
+
+### Step 3：生成契约 YAML
+
+按 `references/loop-engineer.md` 的契约结构组装：
+
+- `contract_id`：读 `contracts/` 目录取下一个可用编号（`C-<NNNN>`）
+- `type`：`single`（单任务）/ `workflow`（多任务编排）
+- `trigger`：`goal`
+- `loop_type`：`convergent`（写码/修 bug）/ `exploratory`（调研/方案比对）
+- `boundary`：只写真实约束，不写"保持代码整洁""写充分注释"等废话
+
+### Step 4：请用户确认
+
+展示完整目标，等用户确认后再写入 `contracts/`。
+
+**不自行触发目标建立流程。** goal-creator 只负责标准化目标文本，执行由用户手动触发目标建立或编排代理接手。
+
+## 输出格式
+
+```markdown
+---
+contract_id: C-<NNNN>
+title: <一句话标题>
+type: single
+trigger: goal
+loop_type: convergent
+references: []
+status: idle
+priority: P0
+owner_role: orchestrator
+---
+## Goal
+<一句话目标描述>
+
+## Boundary
+- <真实约束 1>
+- <真实约束 2>
+
+## DoD
+- [ ] <标准 1> —— 验证：`command` → 期望输出
+- [ ] <标准 2> —— 验证：检查 `file_path` 包含 `content`
+```
+
+**总字符数 ≤ 4000。**
+
+## 自检清单（生成后逐项过）
+
+- [ ] 每条 DoD 有具体的机械验证方法（命令/文件检查/输出对比）？
+- [ ] 没有"代码整洁""充分测试""体验好"等无法机械验证的废话？
+- [ ] Boundary 只写了真实约束，没写通用好习惯？
+- [ ] `contract_id` 不与 `contracts/` 已有契约冲突？
+- [ ] 总字符数 ≤ 4000？
+- [ ] 用户已确认？（未确认不写入 contracts/）
