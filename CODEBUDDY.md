@@ -29,7 +29,8 @@ max_iter / Token 预算 / 停滞检测。
 密钥/产物绝不入库；写码前 check-module；commit 前 Hook 硬拦 ddd_gate（含 CHANGELOG mtime 拦截 + TASK 勾选 WARNING）。
 - **TASK 勾选检查**：`ddd_gate.py check-tasks docs` 扫 04-tasks.md 未勾选 TASK，在 `validations/`、`contracts/C-*.md`（status=done）、`tasks/logs/` 中搜验证证据，有证据但未勾选 → WARNING。集成在 `gates --strict` 和 `pre-commit` 中。
 - **路径约定**：`kb/raw/`、`kb/wiki/`、`methods/`、`logs/` 均指**工作区根目录**（含 `AGENTS.md` 的目录）下的路径，**不是项目级目录**。项目级不设 `kb/` 目录。`/ingest` 写入的 raw 文件必须落到工作区根 `kb/raw/<bucket>/`，不得写到 `projects/<proj>/kb/raw/`。
-- **记忆日志（MUST）**：每次实质工作（写码/修 bug/重构/技术决策）后，向上找到工作区根目录（含 `AGENTS.md` 的目录）的 `.workbuddy/memory/`，追加一条简短记录到当天文件 `YYYY-MM-DD.md`（不存在则创建）。内容：改了什么 / 为什么 / 遇到什么坑。这是 `evolution_scan.py` 的数据源——不写 = 进化系统看不到。
+- **记忆日志（MUST）**：每次实质工作（写码/修 bug/重构/技术决策）后，向上找到工作区根目录（含 `AGENTS.md` 的目录）的 `.workbuddy/memory/`，追加一条简短记录到当天文件 `YYYY-MM-DD.md`（不存在则创建）。内容：改了什么 / 为什么 / 遇到什么坑。
 
 ## 8. 进化系统
-规范见 `docs/EVOLUTION.md`；扫描器 `scripts/evolution_scan.py`。Phase 完成后或用户说"进化扫描"时手动运行。扫描日志 → 提取模式 → 生成提案到 `proposals/` → 用户审批后执行。双向进化（加规则 + 退休规则）。非自动，里程碑驱动。
+
+> 已移除：进化系统属中枢（Projects_dev）专属机制，插件定位为可拔插方法论交付物，不携带。历史见 `docs/CHANGELOG.md`。
