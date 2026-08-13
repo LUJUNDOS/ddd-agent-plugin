@@ -19,6 +19,7 @@
 - 回归测试：`TestMultiHostRoundtrip`（同 target 双宿主装→卸→全部恢复），14 用例全绿。
 - 任务 TASK-0009~0013 全部勾选（validations/run-3.md 验收记录）。
 - `README.md`：快速开始补"新建项目自动接入 DDD"用法（bootstrap + scaffold），目录结构与测试数更新至 v0.2.0。
+- 移除 `.vscode/`（不再在 VSCode 开发）：其闸门任务能力封装为 `scripts/run-checks.py`（一键全量检查）；`_template` 同步移除（源头治理，新项目不再带）。
 
 ## [0.1.0] - 2026-08-13
 

@@ -37,6 +37,7 @@ python scripts/uninstall.py --host reasonix --target <你的项目目录>
 ## 开发命令
 
 ```powershell
+python scripts/run-checks.py                 # 一键全量检查（gates+check-tasks+changelog+drift+tests）
 python scripts/generate.py                    # 重新生成全部宿主镜像
 python scripts/drift_check.py                 # 一致性校验（0=一致 / 1=漂移）
 python scripts/scaffold.py --target <项目根>   # 生成 DDD 文档骨架（docs/00~04，幂等）
