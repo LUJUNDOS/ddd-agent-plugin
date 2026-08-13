@@ -13,7 +13,7 @@
 | 👥 角色流程链 | `goal-creator` → `product-manager`（00/01）→ `architect`（02 四维调研+对抗选型）→ `ui-designer`（03）→ `pm`（04），闸门自动衔接 |
 | 📐 DDD 方法论 | 7 个纪律 skill：`doc-driven`（闸门）/ `gate`（结构闸）/ `verify`（行为真证）/ `review`（收口）/ `no-fake-test`（测试真实性）/ `debug`（调试纪律）+ 机械闸 |
 | 🧠 知识剥离 | 插件不携带任何 kb 内容；`memory-protocol` skill 约定"何时记/记什么/如何回溯"，经验写入宿主原生记忆（Reasonix memory / CLAUDE.md） |
-| 🔄 自进化 | `evolution-scan` skill：扫描宿主记忆提炼重复模式（≥3 次晋升长期区）+ 退休规则（30 天未触发 → 退休候选，用户确认后清理） |
+| 🔄 自进化 | `evolution-scan` skill：维护宿主记忆长期区——退休（30 天未触发 → 用户确认清理）/ 合并去重 / 冲突检测 / 跨项目提炼；晋升（≥3 次）由 memory-protocol 负责，两 skill 不重复 |
 | 📚 自带方法论 | `references/` 打包 6 份方法论文档（法庭式对抗 / PM 思考 / 代码审查标准 / DDD 详细规程 / 能力注册表说明 / 性能优化），装到宿主后引用闭环 |
 
 ## 快速开始

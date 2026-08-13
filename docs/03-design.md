@@ -203,16 +203,17 @@ claude 宿主：    <proj>/.claude/skills/{doc-driven,gate,verify,review,no-fake
   - `uninstall.py`：原存在 → 从备份恢复；原本不存在 → 删除插件创建的
 - **验收**：安装后宿主 settings.json 含插件 PreToolUse 且原 hooks 保留；卸载后 settings.json 与安装前一致（TestHooks）
 
-## 16. v0.2.2 —— evolution-scan（扫描式自进化，FR-016/AC-10）
+## 16. v0.2.2 —— evolution-scan（长期区维护，FR-016/AC-10）
 
-- **定位**：与 memory-protocol 分工——memory-protocol 管"记"（何时记/记什么/如何回溯，**不改变**）；evolution-scan 管"扫/提炼/晋升/退休"。
+- **分工（无重复）**：memory-protocol 管"记 + 晋升"（短期沉淀，同类 ≥3 次或显批 → 长期区，**不改变**）；evolution-scan 管"长期区维护"——扫描**已晋升的长期区条目**，不做 ≥3 次提炼判断（避免与 memory-protocol 重复）。
 - **流程**（`templates/evolution-scan.md`）：
-  1. 扫描宿主记忆中的 error/decision/insight 条目
-  2. 提炼：同类 error ≥3 次且 fix 已验证 → 经验规则（symptom/root_cause/fix）；同类 decision ≥3 次 → 默认决策原则
-  3. 晋升：写入宿主记忆长期区（CLAUDE.md 固定条目等），带 created 日期 + 触发计数
-  4. 退休：长期区条目 30 天未触发 → 退休候选，**用户确认后**清理/归档（Oracle 不可跳过）
-  5. 报告：本次扫描的提炼/晋升/退休清单
-- **验收**：扫描产清单；退休须用户确认；不改 memory-protocol（AC-10）
+  1. 扫描长期区条目（CLAUDE.md 固定条目等）
+  2. 退休：30 天未触发 → 退休候选 → **用户确认后**清理/归档（Oracle 不可跳过）
+  3. 合并/去重：同 root_cause 多条 → 合并保留最完整 + 累计 hits
+  4. 冲突检测：新旧规则矛盾 → 交用户裁决
+  5. 跨项目提炼：不同项目同类 error → 高层通用原则（applies_to 标注）
+  6. 报告：退休/合并/冲突/跨项目提炼四类清单
+- **验收**：产出四类清单；退休须用户确认；不对短期记忆做 ≥3 次晋升（AC-10）
 
 ## 14. v0.2.0 —— scaffold.py 接口（FR-014）
 
