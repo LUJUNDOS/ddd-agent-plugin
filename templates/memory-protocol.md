@@ -25,6 +25,7 @@ insight:  { topic, takeaway, applies_to }
 - 新会话开头检索宿主记忆中的 error / decision 类型，命中先读再动手。
 - 同类 error 第二次出现：若记忆中有 fix，直接复用，不重复诊断。
 - 同类事件发生 ≥3 次：视为该宿主环境的高频模式，写入宿主记忆的长期区（如 CLAUDE.md 固定条目）。
+- 长期区条目的维护（退休/合并/冲突/跨项目提炼）由 `evolution-scan` 负责（本 skill 只做记与晋升，不越权维护）。
 
 ## 判违规
 - 把经验写回插件包内（kb/ 或 templates/）→ 拒。插件是稳定规程，不是存储。

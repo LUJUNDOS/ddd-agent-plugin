@@ -52,7 +52,7 @@ python scripts/ddd_gate.py check-tasks docs   # 任务勾选核对
 
 ```
 plugin.manifest.yaml      单一源：元数据 + skill 清单（13）+ 宿主声明 + references
-templates/                13 份宿主无关 skill 正文（bootstrap/5 角色/7 纪律，{{SKILL_NAME}} 占位符）L_NAME}} 占位符）
+templates/                14 份宿主无关 skill 正文（bootstrap/5 角色/7 纪律/memory-protocol/evolution-scan，{{SKILL_NAME}} 占位符） 纪律，{{SKILL_NAME}} 占位符）L_NAME}} 占位符）
 references/               6 份方法论（法庭式对抗 / PM 思考 / 代码审查标准 / DDD 详细规程 / 能力注册表 / 性能优化，随镜像分发）
 hosts/<host>/layout.json  per-host 适配（目录布局 + frontmatter 规则）
 scripts/                  generate / drift_check / install / uninstall / scaffold / ddd_gate / claude_gate_hook / scaffold / ddd_gate
