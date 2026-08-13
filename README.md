@@ -13,7 +13,7 @@
 | 👥 角色流程链 | `goal-creator` → `product-manager`（00/01）→ `architect`（02 四维调研+对抗选型）→ `ui-designer`（03）→ `pm`（04），闸门自动衔接 |
 | 📐 DDD 方法论 | 7 个纪律 skill：`doc-driven`（闸门）/ `gate`（结构闸）/ `verify`（行为真证）/ `review`（收口）/ `no-fake-test`（测试真实性）/ `debug`（调试纪律）+ 机械闸 |
 | 🧠 知识剥离 | 插件不携带任何 kb 内容；`memory-protocol` skill 约定"何时记/记什么/如何回溯"，经验写入宿主原生记忆（Reasonix memory / CLAUDE.md） |
-| 📚 自带方法论 | `references/` 打包 4 份方法论文档（法庭式对抗 / PM 思考 / 代码审查标准 / DDD 详细规程），装到宿主后引用闭环 |
+| 📚 自带方法论 | `references/` 打包 6 份方法论文档（法庭式对抗 / PM 思考 / 代码审查标准 / DDD 详细规程 / 能力注册表说明 / 性能优化），装到宿主后引用闭环 |
 
 ## 快速开始
 
@@ -50,9 +50,9 @@ python scripts/ddd_gate.py check-tasks docs   # 任务勾选核对
 ## 目录结构
 
 ```
-plugin.manifest.yaml      单一源：元数据 + skill 清单（12）+ 宿主声明 + references
+plugin.manifest.yaml      单一源：元数据 + skill 清单（13）+ 宿主声明 + references
 templates/                13 份宿主无关 skill 正文（bootstrap/5 角色/7 纪律，{{SKILL_NAME}} 占位符）L_NAME}} 占位符）
-references/               4 份方法论（法庭式对抗 / PM 思考 / 代码审查标准 / DDD 详细规程，随镜像分发）
+references/               6 份方法论（法庭式对抗 / PM 思考 / 代码审查标准 / DDD 详细规程 / 能力注册表 / 性能优化，随镜像分发）
 hosts/<host>/layout.json  per-host 适配（目录布局 + frontmatter 规则）
 scripts/                  generate / drift_check / install / uninstall / scaffold / ddd_gate / claude_gate_hook / scaffold / ddd_gate
 tests/                    单元测试（16 用例，纯标准库 unittest）
