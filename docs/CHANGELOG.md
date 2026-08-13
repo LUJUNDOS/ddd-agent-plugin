@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [0.2.0] - 2026-08-13
+
+### 新增（中枢同步）
+- 需求 FR-012~015 + 验收 AC-8/9（`docs/01-requirements.md`）：新建项目 DDD 自动引导 / 角色 skill 链 / scaffold 骨架生成 / references 打包。
+- 设计（`docs/03-design.md` §11~14）：bootstrap skill 流程、5 角色 skill 规格、references 打包、scaffold.py 接口。
+- 任务 TASK-0009~0013（`docs/04-tasks.md`）。
+
 ## [0.1.0] - 2026-08-13
 
 ### 新增

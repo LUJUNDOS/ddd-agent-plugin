@@ -35,6 +35,10 @@ related: [00-vision]
 | FR-009 | **宿主清单**：manifest 声明支持的宿主列表与每宿主适配状态（适配/已验证） | A | P0 |
 | FR-010 | **DDD 文档链**：本项目自身遵循 G0~G3 五层文档 + `ddd_gate.py` 机械校验 | V | P0 |
 | FR-011 | 可选：新增宿主 = 新增 per-host 模板片段 + 真机验证，不改生成器主体 | A | P1 |
+| FR-012 | **新建项目 DDD 自动引导**：bootstrap skill——用户说"新建项目"时自动初始化 DDD 文档骨架（docs/00~04）+ 询问是否启动需求调研 + 选择后当场启动流程（对齐中枢 new-project Step 9） | V | P0 |
+| FR-013 | **DDD 流程角色 skill 链**：goal-creator → product-manager（00/01）→ architect（02）→ ui-designer（03）→ pm（04），各角色自动衔接闸门（G0 通过才写 02 等） | V | P0 |
+| FR-014 | **scaffold.py 骨架生成**：一键生成 docs/00-vision/01-requirements/02-architecture/03-design/04-tasks 空模板（frontmatter + 章节），自动化代替手动初始化 | A | P0 |
+| FR-015 | **references 打包**：角色 skill 依赖的方法论文档（adversarial-selection / pm-thinking-guide / code-review-standard）随插件分发，装到宿主后引用闭环（可拔插不依赖中枢） | V | P0 |
 
 ## 2. 非功能需求（NFR）
 
@@ -57,6 +61,8 @@ related: [00-vision]
 | AC-5 | install 一键装、uninstall 后宿主目录与安装前 diff 为空 | 安装前快照 vs 卸载后快照 |
 | AC-6 | 本项目自身 DDD 门禁全绿 | `ddd_gate.py gates` PASS + 用户 Oracle 确认 |
 | AC-7 | 任一宿主装上后，ddd_gate 机械闸拦截生效（未 approved 写码被拦） | 模拟违规场景真机验证 |
+| AC-8 | 新建项目自动引导：装插件后对"新建项目"触发 bootstrap，自动生成 docs/00~04 骨架 + 引导需求调研启动 | 真机模拟"新建项目"流程 |
+| AC-9 | 角色 skill 链可用：product-manager 等 5 角色 skill 装进宿主后可被触发，references 引用闭环（无外部依赖断链） | 真机触发 + 引用路径检查 |
 
 ## 4. MVP 边界
 

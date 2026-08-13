@@ -157,3 +157,49 @@ claude 宿主：    <proj>/.claude/skills/{doc-driven,gate,verify,review,no-fake
 | UT-4 包内容无 kb | 产物清单断言无 kb/ 文件 | AC-4 |
 | E2E-1 reasonix 真机 | 安装后 5 skill 可触发 + ddd_gate 拦截生效 | AC-2/7 |
 | E2E-2 claude 真机 | 同上 | AC-3/7 |
+
+## 11. v0.2.0 —— bootstrap skill（新建项目 DDD 自动引导，FR-012/AC-8）
+
+对齐中枢 `new-project` Step 9（DDD 引导 MUST）。装到宿主后：
+
+```
+用户说"新建项目 <name>"
+  → bootstrap 读取 manifest（可选 --target 参数）
+  → 调用 scripts/scaffold.py 生成 docs/00~04 骨架（自动代替手动）
+  → 告知用户：DDD 文档链已就绪（G0~G3 闸门约束生效）
+  → 用宿主询问机制问（AskUserQuestion / ask，宿主无关化描述）：
+      A. 现在启动 DDD 需求调研（推荐）→ 当场启动 product-manager skill
+      B. 稍后启动 → 提示"开始实现这个项目"可触发
+      C. 只建骨架不走 DDD → 告知 G0 不放行禁止写码的风险
+  → 选 A 当场启动，不让用户再发消息
+```
+
+验收：scaffold 生成 5 份骨架（00~04 含 frontmatter + 章节模板）；询问出现三选项；选 A 进入 product-manager 流程（AC-8）。
+
+## 12. v0.2.0 —— 5 个角色 skill（DDD 流程执行链，FR-013/AC-9）
+
+| skill | 产出 | 前置闸门 | references 依赖 |
+|-------|------|---------|----------------|
+| goal-creator | 模糊意图 → 可自证目标 | — | 无 |
+| product-manager | 00-vision + 01-requirements（七阶段访谈，FR-NNN） | — | pm-thinking-guide.md |
+| architect | 02-architecture（四维调研+对抗选型，AD-NNN） | G0（00/01 approved） | adversarial-selection.md |
+| ui-designer | 03-design（COMP-NNN 视觉参数） | G1 前半（02 approved） | 无（对话式） |
+| pm | 04-tasks（TASK-NNN + 并行组） | G1（02/03 approved） | 无 |
+
+内容源：中枢 `.workbuddy/skills/{goal-creator,product-manager,architect,ui-designer,pm}/SKILL.md`，**宿主无关化**（移除 Claude 专属引用），frontmatter 参数化（{{SKILL_NAME}}/{{SKILL_DESC}}）。
+
+## 13. v0.2.0 —— references 打包（FR-015）
+
+- `references/` 目录：从中枢 `methods/` 复制 `adversarial-selection.md`、`pm-thinking-guide.md`、`code-review-standard.md`
+- 生成器将其拷贝进 dist/<host>/references/，角色 skill 内引用路径改为 `references/<file>`（相对宿主项目）
+- 验收：装到宿主后 references 文件存在，角色 skill 内引用路径可达（AC-9）
+
+## 14. v0.2.0 —— scaffold.py 接口（FR-014）
+
+```
+python scripts/scaffold.py --target <项目根>
+```
+- 生成 `docs/00-vision.md` ~ `docs/04-tasks.md` 骨架（frontmatter：status: draft / title / layer / related）
+- 每份含章节模板（vision：背景/愿景/目标/非目标；requirements：FR 表/NFR/AC/MVP 边界；architecture：架构总览/ADR 模板；design：详细设计骨架；tasks：任务清单模板）
+- 幂等：已存在的文档不覆盖（报 INFO 跳过）
+- 纯标准库

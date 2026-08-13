@@ -41,3 +41,25 @@ related: [03-design]
 - [x] **TASK-0008** README + 镜像打包 + CHANGELOG
   - **内容**：`README.md`（安装/卸载/生成/新增宿主步骤）；CHANGELOG.md；确认镜像含 ddd_gate.py。
   - **DoD**：README 覆盖 AC-5 用户路径；CHANGELOG 有记录（check-changelog 通过）；ddd_gate.py 在 dist 镜像内。
+
+## v0.2.0（中枢同步：新建项目 DDD 自动引导 + 角色 skill 链，FR-012~015）
+
+- [ ] **TASK-0009** references/ 打包（FR-015）
+  - **内容**：复制中枢 `methods/{adversarial-selection,pm-thinking-guide,code-review-standard}.md` 到 `references/`；生成器将其纳入 dist 镜像。
+  - **DoD**：3 份文件存在；generate 后 dist/<host>/references/ 含 3 份（UT 断言）。
+
+- [ ] **TASK-0010** scripts/scaffold.py（FR-014）
+  - **内容**：按 03-design §14 生成 docs/00~04 骨架；幂等（已存在跳过）；纯标准库。
+  - **DoD**：空项目生成 5 份文档（frontmatter 合法、可过 ddd_gate gates draft 态）；重复执行不覆盖（UT）。
+
+- [ ] **TASK-0011** templates/bootstrap.md（FR-012/AC-8）
+  - **内容**：新建项目自动引导 skill（03-design §11）：scaffold 骨架 → 三选项询问 → 选 A 当场启动 product-manager。
+  - **DoD**：流程完整；宿主无关（询问机制通用描述）；manifest 注册。
+
+- [ ] **TASK-0012** 5 个角色 skill 模板（FR-013/AC-9）
+  - **内容**：从中枢 `.workbuddy/skills/` 提取 goal-creator/product-manager/architect/ui-designer/pm，宿主无关化 + 参数化 frontmatter，references 引用改 `references/<file>`。
+  - **DoD**：5 份模板；角色内引用路径指向 references/（可达断言）；闸门衔接逻辑保留。
+
+- [ ] **TASK-0013** manifest 更新 + 测试扩展 + 收口
+  - **内容**：manifest skills 6→12、scripts +scaffold.py、references 声明；tests 加 UT-5（scaffold 幂等）/UT-6（references 打包）；README/CHANGELOG 更新。
+  - **DoD**：generate 全量通过；drift 0 差异；测试全绿；真机模拟"新建项目"引导（AC-8）与角色 skill 引用可达（AC-9）。
