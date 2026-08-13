@@ -18,8 +18,12 @@ import sys
 
 import install
 
-MANIFEST_NAME = install.MANIFEST_NAME
+MANIFEST_PREFIX = install.MANIFEST_PREFIX
 BACKUP_DIR = install.BACKUP_DIR
+
+
+def manifest_name(host):
+    return f"{MANIFEST_PREFIX}-{host}.json"
 
 
 def main(argv=None):
@@ -29,9 +33,9 @@ def main(argv=None):
     args = ap.parse_args(argv)
 
     target = os.path.abspath(args.target)
-    mpath = os.path.join(target, MANIFEST_NAME)
+    mpath = os.path.join(target, manifest_name(args.host))
     if not os.path.isfile(mpath):
-        print(f"[FAIL] 未找到安装清单 {MANIFEST_NAME}（拒绝卸载）")
+        print(f"[FAIL] 未找到安装清单 {os.path.basename(mpath)}（拒绝卸载）")
         sys.exit(1)
     with open(mpath, "r", encoding="utf-8") as f:
         record = json.load(f)
@@ -61,12 +65,17 @@ def main(argv=None):
             restored.append(relp)
 
     # 3) 清理空目录 + manifest + backup
-    for dirpath, dirnames, filenames in os.walk(target, topdown=False):
-        if not dirnames and not filenames and dirpath != target:
-            try:
-                os.rmdir(dirpath)
-            except OSError:
-                pass
+    #    先收集全部目录再自底向上删除（避免遍历中删除导致遗漏）
+    all_dirs = []
+    for dirpath, dirnames, filenames in os.walk(target):
+        all_dirs.append(dirpath)
+    for d in reversed(all_dirs):
+        if d == target:
+            continue
+        try:
+            os.rmdir(d)
+        except OSError:
+            pass  # 非空目录，保留
     os.remove(mpath)
     shutil.rmtree(backup_dir, ignore_errors=True)
 

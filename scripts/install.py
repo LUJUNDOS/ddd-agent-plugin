@@ -20,8 +20,12 @@ import sys
 import generate
 
 ROOT = generate.ROOT
-MANIFEST_NAME = ".ddd-agent-plugin-manifest.json"
+MANIFEST_PREFIX = ".ddd-agent-plugin-manifest"
 BACKUP_DIR = ".ddd-agent-plugin-backup"
+
+
+def manifest_name(host):
+    return f"{MANIFEST_PREFIX}-{host}.json"
 
 
 def _sha256(path):
@@ -40,8 +44,8 @@ def _snapshot(base_dir):
     for dirpath, dirnames, filenames in os.walk(base_dir):
         if BACKUP_DIR in dirnames:
             dirnames.remove(BACKUP_DIR)
-        if MANIFEST_NAME in filenames:
-            filenames.remove(MANIFEST_NAME)
+        # 排除所有本插件清单变体（manifest 在宿主根，不在 skills 下；此处兜底）
+        filenames = [fn for fn in filenames if not fn.startswith(MANIFEST_PREFIX)]
         for fn in filenames:
             fp = os.path.join(dirpath, fn)
             snap[os.path.relpath(fp, base_dir).replace("\\", "/")] = _sha256(fp)
@@ -123,7 +127,7 @@ def main(argv=None):
             shutil.copy2(sp, tp)
             copied.append(relp)
 
-    # 4) 写安装清单
+    # 4) 写安装清单（按宿主分文件，避免多宿主互相覆盖）
     installed = {
         "host": args.host,
         "base_dir": layout["base_dir"],
@@ -133,12 +137,13 @@ def main(argv=None):
         "snapshot": snapshot,
         "installed_at": __import__("datetime").datetime.now().isoformat(timespec="seconds"),
     }
-    with open(os.path.join(target, MANIFEST_NAME), "w", encoding="utf-8") as f:
+    mpath = os.path.join(target, manifest_name(args.host))
+    with open(mpath, "w", encoding="utf-8") as f:
         json.dump(installed, f, ensure_ascii=False, indent=2)
 
     print(f"install: {args.host} -> {target}")
     print(f"  files: {len(copied)}，backed_up: {len(backed_up)}")
-    print(f"  manifest: {MANIFEST_NAME}")
+    print(f"  manifest: {os.path.basename(mpath)}")
     sys.exit(0)
 
 

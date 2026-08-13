@@ -23,3 +23,5 @@
 ### 修复
 - `generate.py` 占位符渲染：`string.Template` 不认 `{{}}`，改为显式替换（保持 03-design 字面一致）。
 - `install.py` 复制路径：保留顶层目录名（`.reasonix`），备份/卸载路径统一相对 target。
+- `install.py`/`uninstall.py`：卸载清单按宿主分文件（`.ddd-agent-plugin-manifest-<host>.json`），修复多宿主安装互相覆盖清单（真机验证发现）。
+- `uninstall.py`：空目录清理改为先收集再自底向上删除，修复 `.reasonix` 空目录残留（真机验证发现）。
