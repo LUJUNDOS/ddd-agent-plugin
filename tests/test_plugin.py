@@ -325,6 +325,12 @@ class TestHooks(unittest.TestCase):
             # 插件 hook 追加（reasonix 宿主 = 小写工具名 anchored regex）
             self.assertIn("edit_file|write_file|multi_edit|delete_range"
                           "|notebook_edit|move_file", matchers)
+            # command 已解析为宿主绝对路径（不依赖 ${workspaceFolder} 展开）
+            cmds = [h["command"] for e in merged["hooks"]["PreToolUse"]
+                    for h in e.get("hooks", [])]
+            self.assertTrue(any("claude_gate_hook.py" in c and
+                                "${workspaceFolder}" not in c for c in cmds),
+                            "hook command 应含绝对路径且无 ${workspaceFolder} 残留")
             # 卸载后恢复原状
             with self.assertRaises(SystemExit):
                 uninstall.main(["--host", "reasonix", "--target", host_root])

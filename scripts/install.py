@@ -152,7 +152,10 @@ def main(argv=None):
         new_entry = {
             "matcher": hook_cfg["pre_tool_use"]["matcher"],
             "hooks": [{"type": "command",
-                       "command": hook_cfg["pre_tool_use"]["command"]}],
+                       # 安装时把 ${workspaceFolder} 替换为宿主绝对路径：
+                       # 不依赖宿主是否支持变量展开（Reasonix 文档未确认），两宿主通用
+                       "command": hook_cfg["pre_tool_use"]["command"]
+                                  .replace("${workspaceFolder}", target)}],
         }
         if not any(e.get("matcher") == new_entry["matcher"] for e in entries):
             entries.append(new_entry)
