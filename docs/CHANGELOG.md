@@ -9,6 +9,7 @@
 - `ui-designer` 增强：DNA 提取 / 高工艺构建 / 反廉价审计三维能力 + references 引用。
 - `product-manager` / `architect`：补 finesse-brief 共享引用（结构分类 / 模块实体建模）。
 - `generate.py` references 拷贝改递归（子目录）；manifest references 加 3 目录；测试扩展（AC-11 资产断言）。
+- 交付收尾：manifest version 0.2.2→0.2.3；README 特性表补"设计能力"行 + 版本标注 v0.2.3；04-tasks 补 TASK-0017；validations/run-7.md；中枢日志 R-0016。
 
 ## [0.2.2] - 2026-08-13
 

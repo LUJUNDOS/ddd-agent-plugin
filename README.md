@@ -1,6 +1,6 @@
 # ddd-agent-plugin —— DDD 方法论可拔插 Agent 插件
 
-> 以 `Projects_dev` 中枢为蓝本的可拔插 Skill Plugin：**装上 = 任何 agent 获得 DDD G0~G3 全流程；拔下 = 宿主无残留；经验自进化沉淀在宿主原生记忆（插件零知识库负担）。** 当前版本 **v0.2.2**。
+> 以 `Projects_dev` 中枢为蓝本的可拔插 Skill Plugin：**装上 = 任何 agent 获得 DDD G0~G3 全流程；拔下 = 宿主无残留；经验自进化沉淀在宿主原生记忆（插件零知识库负担）。** 当前版本 **v0.2.3**。
 
 ## 特性
 
@@ -14,7 +14,8 @@
 | 📐 DDD 方法论 | 7 个纪律 skill：`doc-driven`（闸门）/ `gate`（结构闸）/ `verify`（行为真证）/ `review`（收口）/ `no-fake-test`（测试真实性）/ `debug`（调试纪律）+ 机械闸 |
 | 🧠 知识剥离 | 插件不携带任何 kb 内容；`memory-protocol` skill 约定"何时记/记什么/如何回溯"，经验写入宿主原生记忆（Reasonix memory / CLAUDE.md） |
 | 🔄 自进化 | `evolution-scan` skill：维护宿主记忆长期区——退休（30 天未触发 → 用户确认清理）/ 合并去重 / 冲突检测 / 跨项目提炼；晋升（≥3 次）由 memory-protocol 负责，两 skill 不重复 |
-| 📚 自带方法论 | `references/` 打包 6 份方法论文档（法庭式对抗 / PM 思考 / 代码审查标准 / DDD 详细规程 / 能力注册表说明 / 性能优化），装到宿主后引用闭环 |
+| 🎨 设计能力 | `ui-designer` 融合 design-dna（DNA 提取）+ finesse-ui（高工艺/反廉价审计）方法论；`product-manager`/`architect` 共享 finesse-brief（结构分类/实体建模） |
+| 📚 自带方法论 | `references/` 打包 6 份平铺方法论 + 3 个设计子目录（design-dna/finesse-ui/finesse-brief），装到宿主后引用闭环 |
 
 ## 快速开始
 
@@ -53,7 +54,7 @@ python scripts/ddd_gate.py check-tasks docs   # 任务勾选核对
 ```
 plugin.manifest.yaml      单一源：元数据 + skill 清单（13）+ 宿主声明 + references
 templates/                14 份宿主无关 skill 正文（bootstrap/5 角色/7 纪律/memory-protocol/evolution-scan，{{SKILL_NAME}} 占位符） 纪律，{{SKILL_NAME}} 占位符）L_NAME}} 占位符）
-references/               6 份方法论（法庭式对抗 / PM 思考 / 代码审查标准 / DDD 详细规程 / 能力注册表 / 性能优化，随镜像分发）
+references/               6 份平铺方法论 + 3 设计子目录（design-dna/finesse-ui/finesse-brief，随镜像分发）
 hosts/<host>/layout.json  per-host 适配（目录布局 + frontmatter 规则）
 scripts/                  generate / drift_check / install / uninstall / scaffold / ddd_gate / claude_gate_hook / scaffold / ddd_gate
 tests/                    单元测试（16 用例，纯标准库 unittest）

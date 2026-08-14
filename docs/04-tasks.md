@@ -78,3 +78,9 @@ related: [03-design]
 - [x] **TASK-0016** evolution-scan skill
   - **内容**：templates/evolution-scan.md（长期区维护：退休 30 天/合并去重/冲突检测/跨项目提炼；去初版 ≥3 次重复，晋升归 memory-protocol）；manifest skills 13→14。
   - **DoD**：镜像 14 skill 渲染正确（无 ≥3 次提炼逻辑残留）；memory-protocol ↔ evolution-scan 双向引用；AC-10 真机模拟。
+
+## v0.2.3（设计能力融合：FR-017/018/AC-11）
+
+- [x] **TASK-0017** 设计能力融合
+  - **内容**：references 3 子目录（design-dna 全量 5 份 / finesse-ui 精选 13 份 / finesse-brief 核心 5 份 + README 来源说明）；ui-designer 增强（DNA/高工艺/反廉价审计）+ pm/architect 共享引用；generate 递归拷贝；manifest version 0.2.3。
+  - **DoD**：镜像子目录可达（AC-11）；无 html/js 资产；引用闭环含子目录；16 测试全绿；manifest version 0.2.3。

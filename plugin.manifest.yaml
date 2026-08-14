@@ -2,7 +2,7 @@
 # 规则真源：docs/03-design.md（approved）。改动须走 DDD 流程。
 id: ddd-agent-plugin
 name: DDD Agent Plugin
-version: 0.2.2
+version: 0.2.3
 license: MIT
 description: "DDD 方法论可拔插 agent 插件：新建项目自动引导 + 5 角色流程 skill + 6 纪律 skill + 机械闸。装上=任何 agent 获得 G0~G3 全流程；拔下=宿主无残留；经验自进化沉淀在宿主原生记忆。"
 skills:
