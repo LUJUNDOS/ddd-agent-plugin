@@ -78,7 +78,7 @@ dist/                     生成产物（不入库）
 
 ## 许可
 
-MIT。以 `Projects_dev` 蓝本纪律 skill 内容为基准（AD-0004），结构对齐社区 SDD 插件范式（`docs/research/competitors.md`）。
+MIT（Copyright (c) 2026 LUJUNDOS，见根 `LICENSE`）。以 `Projects_dev` 蓝本纪律 skill 内容为基准（AD-0004），结构对齐社区 SDD 插件范式（`docs/research/competitors.md`）。第三方设计资产（design-dna/finesse 系列）为 MIT 再分发，见下方声明与 `references/NOTICE.md`。
 
 ## 第三方内容声明
 
