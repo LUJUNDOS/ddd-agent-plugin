@@ -11,6 +11,8 @@
 - `generate.py` references 拷贝改递归（子目录）；manifest references 加 3 目录；测试扩展（AC-11 资产断言）。
 - 交付收尾：manifest version 0.2.2→0.2.3；README 特性表补"设计能力"行 + 版本标注 v0.2.3；04-tasks 补 TASK-0017；validations/run-7.md；中枢日志 R-0016。
 - 合规补充：finesse-ui/finesse-brief 补 LICENSE（MIT 模板）；`references/NOTICE.md` 集中声明 3 个第三方 MIT 子目录（版权人/许可/来源/再分发条件）；各 README 与根 README 补来源说明与第三方声明章节。
+- 第三方出处查实：design-dna ← zanwei/design-dna（1405⭐）；finesse-ui ← mouse-lin/finesse-skill（435⭐）；finesse-brief ← mouse-lin/finesse-brief——NOTICE/README 来源链接更新。
+- 版权声明：新增根 `LICENSE`（MIT，Copyright (c) 2026 LUJUNDOS）；README 许可章节补版权人。
 
 ## [0.2.2] - 2026-08-13
 
