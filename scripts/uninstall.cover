@@ -1,0 +1,124 @@
+       #!/usr/bin/env python3
+       # -*- coding: utf-8 -*-
+    1: """
+       uninstall.py —— 一键卸载插件（03-design §7 / FR-007 / AC-5）
+       
+       读 .ddd-agent-plugin-manifest.json → 删除插件文件 → 恢复被覆盖文件 →
+       删除 manifest 与 backup → 校验宿主 skill 目录与安装前快照一致。
+       
+       用法：
+         python scripts/uninstall.py --host <name> --target <宿主项目根>
+       退出码：0 = 卸载并校验通过；1 = 无 manifest 或校验失败（拒绝执行/报错）。
+       """
+    1: import argparse
+    1: import json
+    1: import os
+    1: import shutil
+    1: import sys
+       
+    1: import install
+       
+    1: MANIFEST_PREFIX = install.MANIFEST_PREFIX
+    1: BACKUP_PREFIX = install.BACKUP_PREFIX
+       
+       
+    1: def manifest_name(host):
+    6:     return f"{MANIFEST_PREFIX}-{host}.json"
+       
+       
+    1: def backup_dir_name(host):
+    5:     return f"{BACKUP_PREFIX}-{host}"
+       
+       
+    1: def main(argv=None):
+    6:     ap = argparse.ArgumentParser(description="卸载插件（恢复宿主原状）")
+    6:     ap.add_argument("--host", required=True, help="reasonix|claude")
+    6:     ap.add_argument("--target", required=True, help="宿主项目根目录")
+    6:     args = ap.parse_args(argv)
+       
+    6:     target = os.path.abspath(args.target)
+    6:     mpath = os.path.join(target, manifest_name(args.host))
+    6:     if not os.path.isfile(mpath):
+    1:         print(f"[FAIL] 未找到安装清单 {os.path.basename(mpath)}（拒绝卸载）")
+    1:         sys.exit(1)
+   10:     with open(mpath, "r", encoding="utf-8") as f:
+    5:         record = json.load(f)
+    5:     if record["host"] != args.host:
+               print(f"[FAIL] 清单宿主 {record['host']} 与参数 {args.host} 不符")
+               sys.exit(1)
+       
+           # 1) 删除插件文件（仅删清单记录的）
+    5:     deleted, missing = [], []
+  265:     for relp in record["files"]:
+  260:         fp = os.path.join(target, relp)
+  260:         if os.path.isfile(fp):
+  260:             os.remove(fp)
+  260:             deleted.append(relp)
+               else:
+                   missing.append(relp)
+       
+           # 2) 恢复被覆盖文件
+    5:     backup_dir = os.path.join(target, backup_dir_name(args.host))
+    5:     restored = []
+   47:     for relp in record["backed_up"]:
+   42:         bp = os.path.join(backup_dir, relp)
+   42:         if os.path.isfile(bp):
+   42:             dp = os.path.join(target, relp)
+   42:             os.makedirs(os.path.dirname(dp), exist_ok=True)
+   42:             shutil.copy2(bp, dp)
+   42:             restored.append(relp)
+       
+           # 2.5) hooks 恢复：settings.json 还原为安装前状态
+    5:     hooks_restored = False
+    5:     hook_state = record.get("hooks")
+    5:     if hook_state:
+    5:         settings_path = os.path.join(target, hook_state["settings_file"])
+    5:         if hook_state["existed"]:
+                   # 从备份恢复原 settings.json（保留宿主原有 hooks/其他配置）
+    1:             bp = os.path.join(backup_dir, hook_state["settings_file"])
+    1:             if os.path.isfile(bp):
+    1:                 os.makedirs(os.path.dirname(settings_path), exist_ok=True)
+    1:                 shutil.copy2(bp, settings_path)
+    1:                 hooks_restored = True
+               else:
+                   # 原本不存在 → 删除插件创建的
+    4:             if os.path.isfile(settings_path):
+    4:                 os.remove(settings_path)
+    4:                 hooks_restored = True
+       
+           # 3) 清理空目录 + manifest + backup
+           #    先收集全部目录再自底向上删除（避免遍历中删除导致遗漏）
+    5:     all_dirs = []
+  159:     for dirpath, dirnames, filenames in os.walk(target):
+  154:         all_dirs.append(dirpath)
+  159:     for d in reversed(all_dirs):
+  154:         if d == target:
+    5:             continue
+  149:         try:
+  149:             os.rmdir(d)
+   60:         except OSError:
+   60:             pass  # 非空目录，保留
+    5:     os.remove(mpath)
+    5:     shutil.rmtree(backup_dir, ignore_errors=True)
+       
+           # 4) 校验：宿主 skill 目录与安装前快照一致（AC-5）
+    5:     base_dir = os.path.join(target, record["base_dir"].strip("/"))
+    5:     now = install._snapshot(base_dir)
+    5:     diff = []
+    8:     for k in set(record["snapshot"]) | set(now):
+    3:         if record["snapshot"].get(k) != now.get(k):
+                   diff.append(k)
+    5:     if diff:
+               print(f"[FAIL] 卸载后目录与安装前快照不一致: {diff[:10]}")
+               sys.exit(1)
+       
+    5:     print(f"uninstall: {args.host} <- {target}")
+    5:     print(f"  deleted: {len(deleted)}，missing(已不存在): {len(missing)}，restored: {len(restored)}")
+    5:     if hook_state:
+    5:         print(f"  hooks: settings.json {'restored' if hooks_restored else '无变化'}")
+    5:     print(f"  快照校验通过 ✓（宿主 skill 目录已恢复原状）")
+    5:     sys.exit(0)
+       
+       
+    1: if __name__ == "__main__":
+           main()

@@ -1,0 +1,195 @@
+       #!/usr/bin/env python3
+       # -*- coding: utf-8 -*-
+    1: """
+       install.py —— 一键安装插件到目标宿主（03-design §7 / FR-006）
+       
+       流程：generate（确保 dist 最新）→ 快照宿主既有 skill 文件 → 复制镜像 →
+       备份被覆盖文件 → 写 manifest-installed.json（卸载依据）。
+       幂等：重复 install 覆盖更新。
+       
+       用法：
+         python scripts/install.py --host <name> --target <宿主项目根>
+       """
+    1: import argparse
+    1: import hashlib
+    1: import json
+    1: import os
+    1: import shutil
+    1: import sys
+       
+    1: import generate
+       
+    1: ROOT = generate.ROOT
+    1: MANIFEST_PREFIX = ".ddd-agent-plugin-manifest"
+    1: BACKUP_PREFIX = ".ddd-agent-plugin-backup"
+       
+       
+    1: def manifest_name(host):
+    5:     return f"{MANIFEST_PREFIX}-{host}.json"
+       
+       
+    1: def backup_dir_name(host):
+    7:     return f"{BACKUP_PREFIX}-{host}"
+       
+       
+    1: def _sha256(path):
+    6:     h = hashlib.sha256()
+   12:     with open(path, "rb") as f:
+   24:         for chunk in iter(lambda: f.read(65536), b""):
+    6:             h.update(chunk)
+    6:     return h.hexdigest()
+       
+       
+    1: def _snapshot(base_dir):
+           """扫描目录，返回 {相对路径: sha256}。目录不存在返回 {}。"""
+   10:     snap = {}
+   10:     if not os.path.isdir(base_dir):
+    4:         return snap
+   18:     for dirpath, dirnames, filenames in os.walk(base_dir):
+   12:         if BACKUP_PREFIX in dirnames:
+                   dirnames.remove(BACKUP_PREFIX)
+               # 排除所有本插件清单变体（manifest 在宿主根，不在 skills 下；此处兜底）
+   18:         filenames = [fn for fn in filenames if not fn.startswith(MANIFEST_PREFIX)]
+   18:         for fn in filenames:
+    6:             fp = os.path.join(dirpath, fn)
+    6:             snap[os.path.relpath(fp, base_dir).replace("\\", "/")] = _sha256(fp)
+    6:     return snap
+       
+       
+    1: def _copy_tree_with_backup(src, dst, backup_dir, prefix=""):
+           """复制 src 树到 dst，覆盖前备份原文件到 backup_dir。
+           copied/backed_up 记录相对 target（dst 的父上下文）的完整路径（prefix 为顶层目录名）。"""
+   15:     copied, backed_up = [], []
+  120:     for dirpath, dirnames, filenames in os.walk(src):
+  105:         rel = os.path.relpath(dirpath, src)
+  105:         target_dir = os.path.join(dst, rel) if rel != "." else dst
+  105:         os.makedirs(target_dir, exist_ok=True)
+  365:         for fn in filenames:
+  260:             sp = os.path.join(dirpath, fn)
+  260:             tp = os.path.join(target_dir, fn)
+  260:             relp = os.path.relpath(tp, dst).replace("\\", "/")
+  260:             relp_full = (prefix + "/" + relp) if prefix else relp
+  260:             if os.path.isfile(tp):
+   42:                 bdir = os.path.join(backup_dir, os.path.dirname(relp_full))
+   42:                 os.makedirs(bdir, exist_ok=True)
+   42:                 shutil.copy2(tp, os.path.join(bdir, fn))
+   42:                 backed_up.append(relp_full)
+  260:             shutil.copy2(sp, tp)
+  260:             copied.append(relp_full)
+   15:     return copied, backed_up
+       
+       
+    1: def main(argv=None):
+    5:     ap = argparse.ArgumentParser(description="安装插件到目标宿主")
+    5:     ap.add_argument("--host", required=True, help="reasonix|claude")
+    5:     ap.add_argument("--target", required=True, help="宿主项目根目录")
+    5:     args = ap.parse_args(argv)
+       
+    5:     manifest = generate.load_manifest()
+    5:     if args.host not in manifest["hosts"]:
+               print(f"[FAIL] 未知宿主: {args.host}")
+               sys.exit(1)
+    5:     host_cfg = manifest["hosts"][args.host]
+    5:     if not host_cfg.get("layout"):
+               print(f"[FAIL] 宿主 {args.host} 未适配（planned）")
+               sys.exit(1)
+       
+    5:     target = os.path.abspath(args.target)
+    5:     if not os.path.isdir(target):
+               print(f"[FAIL] 目标目录不存在: {target}")
+               sys.exit(1)
+       
+           # 1) 生成最新镜像
+    5:     generate.generate_host(manifest, args.host, os.path.join(ROOT, "dist"))
+    5:     src = os.path.join(ROOT, "dist", args.host)
+       
+           # 2) 快照宿主既有 skill 文件
+   10:     with open(os.path.join(src, "layout.json"), encoding="utf-8") as f:
+    5:         layout = json.load(f)
+    5:     base_dir = os.path.join(target, layout["base_dir"].strip("/"))
+    5:     snapshot = _snapshot(base_dir)
+       
+           # 3) 复制（跳过 layout.json 元数据；保留顶层目录名如 .reasonix）
+    5:     backup_dir = os.path.join(target, backup_dir_name(args.host))
+    5:     shutil.rmtree(backup_dir, ignore_errors=True)
+    5:     copied, backed_up = [], []
+   25:     for entry in os.listdir(src):
+   20:         if entry == "layout.json":
+    5:             continue
+   15:         sp = os.path.join(src, entry)
+   15:         tp = os.path.join(target, entry)
+   15:         if os.path.isdir(sp):
+   15:             c, b = _copy_tree_with_backup(sp, tp, backup_dir, prefix=entry)
+   15:             copied.extend(c)
+   15:             backed_up.extend(b)
+               else:
+                   relp = entry
+                   if os.path.isfile(tp):
+                       os.makedirs(backup_dir, exist_ok=True)
+                       shutil.copy2(tp, os.path.join(backup_dir, entry))
+                       backed_up.append(relp)
+                   shutil.copy2(sp, tp)
+                   copied.append(relp)
+       
+           # 4) hooks 挂载：合并写宿主 settings.json（备份原内容，卸载时恢复）
+    5:     hooks_state = None  # {"settings_file", "existed", "original"}
+    5:     hook_cfg = layout.get("hooks")
+    5:     if hook_cfg:
+    5:         settings_path = os.path.join(target, hook_cfg["settings_file"])
+    5:         existed = os.path.isfile(settings_path)
+    5:         original = None
+    5:         merged = {}
+    5:         if existed:
+    2:             with open(settings_path, "r", encoding="utf-8") as f:
+    1:                 original = f.read()
+    1:             try:
+    1:                 merged = json.loads(original)
+                   except json.JSONDecodeError:
+                       merged = {}
+    5:         hooks = merged.setdefault("hooks", {})
+    5:         entries = hooks.setdefault("PreToolUse", [])
+               # 追加插件条目（matcher 已存在则跳过，避免重复挂载）
+    5:         new_entry = {
+    5:             "matcher": hook_cfg["pre_tool_use"]["matcher"],
+   10:             "hooks": [{"type": "command",
+    5:                        "command": hook_cfg["pre_tool_use"]["command"]}],
+               }
+   11:         if not any(e.get("matcher") == new_entry["matcher"] for e in entries):
+    5:             entries.append(new_entry)
+               # 先备份原 settings.json（供 uninstall 恢复），再写入合并版
+    5:         if existed:
+    1:             bdir = os.path.join(backup_dir, os.path.dirname(hook_cfg["settings_file"]))
+    1:             os.makedirs(bdir, exist_ok=True)
+    1:             shutil.copy2(settings_path, os.path.join(bdir, os.path.basename(hook_cfg["settings_file"])))
+   10:         with open(settings_path, "w", encoding="utf-8") as f:
+    5:             json.dump(merged, f, ensure_ascii=False, indent=2)
+    5:         hooks_state = {
+    5:             "settings_file": hook_cfg["settings_file"],
+    5:             "existed": existed,
+    5:             "original": original,
+               }
+       
+           # 5) 写安装清单（按宿主分文件，避免多宿主互相覆盖）
+    5:     installed = {
+    5:         "host": args.host,
+    5:         "base_dir": layout["base_dir"],
+    5:         "target": target,
+    5:         "files": sorted(copied),
+    5:         "backed_up": sorted(backed_up),
+    5:         "snapshot": snapshot,
+    5:         "hooks": hooks_state,
+    5:         "installed_at": __import__("datetime").datetime.now().isoformat(timespec="seconds"),
+           }
+    5:     mpath = os.path.join(target, manifest_name(args.host))
+   10:     with open(mpath, "w", encoding="utf-8") as f:
+    5:         json.dump(installed, f, ensure_ascii=False, indent=2)
+       
+    5:     print(f"install: {args.host} -> {target}")
+    5:     print(f"  files: {len(copied)}，backed_up: {len(backed_up)}")
+    5:     print(f"  hooks: {('merged -> ' + hook_cfg['settings_file']) if hook_cfg else 'none'}")
+    5:     print(f"  manifest: {os.path.basename(mpath)}")
+    5:     sys.exit(0)
+       
+       
+    1: if __name__ == "__main__":
+           main()
