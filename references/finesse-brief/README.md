@@ -1,6 +1,6 @@
 # references/finesse-brief —— 产品定义方法论（核心打包，共享）
 
-> **来源**：synk 项目 `.reasonix/skills/finesse-brief/`（第三方 MIT 资产，原始发布仓库不可考；版权 Copyright (c) 2026 the finesse authors，见本目录 LICENSE 与 `../NOTICE.md`）。
+> **来源**：https://github.com/mouse-lin/finesse-brief（原始出处，MIT；版权 Copyright (c) 2026 the finesse authors，见本目录 LICENSE 与 `../NOTICE.md`）。
 > **许可**：MIT（SKILL 头部声明 + 本目录 LICENSE）。
 > **共享定位（FR-018）**：product-manager（范围/结构洞察）与 architect（模块/实体建模）共同引用——先定义"产品是什么"再设计架构/界面。
 

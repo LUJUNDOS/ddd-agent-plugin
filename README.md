@@ -82,4 +82,4 @@ MIT。以 `Projects_dev` 蓝本纪律 skill 内容为基准（AD-0004），结�
 
 ## 第三方内容声明
 
-`references/design-dna/`、`references/finesse-ui/`、`references/finesse-brief/` 为**第三方 MIT 许可资产**（非本插件原创），随插件再分发。完整声明（版权人/许可/来源/再分发条件）见 `references/NOTICE.md`。如你知晓其原始发布仓库，请更新 NOTICE 中的来源链接。
+`references/design-dna/`（[zanwei/design-dna](https://github.com/zanwei/design-dna)）、`references/finesse-ui/`（[mouse-lin/finesse-skill](https://github.com/mouse-lin/finesse-skill)）、`references/finesse-brief/`（[mouse-lin/finesse-brief](https://github.com/mouse-lin/finesse-brief)）为**第三方 MIT 许可资产**（非本插件原创），随插件再分发。完整声明（版权人/许可/出处/再分发条件）见 `references/NOTICE.md`。
