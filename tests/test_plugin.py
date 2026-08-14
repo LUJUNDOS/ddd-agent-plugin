@@ -322,7 +322,9 @@ class TestHooks(unittest.TestCase):
                 merged = json.load(f)
             matchers = [e["matcher"] for e in merged["hooks"]["PreToolUse"]]
             self.assertIn("Bash", matchers)                      # 原 hook 保留
-            self.assertIn("Edit|Write|NotebookEdit", matchers)   # 插件 hook 追加
+            # 插件 hook 追加（reasonix 宿主 = 小写工具名 anchored regex）
+            self.assertIn("edit_file|write_file|multi_edit|delete_range"
+                          "|notebook_edit|move_file", matchers)
             # 卸载后恢复原状
             with self.assertRaises(SystemExit):
                 uninstall.main(["--host", "reasonix", "--target", host_root])
@@ -338,7 +340,7 @@ class TestHooks(unittest.TestCase):
                 install.main(["--host", "reasonix", "--target", host_root])
             self.assertTrue(os.path.isfile(sp))
             with open(sp, encoding="utf-8") as f:
-                self.assertIn("Edit|Write|NotebookEdit",
+                self.assertIn("edit_file|write_file",
                               json.dumps(json.load(f)))
             with self.assertRaises(SystemExit):
                 uninstall.main(["--host", "reasonix", "--target", host_root])
