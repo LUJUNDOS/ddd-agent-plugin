@@ -14,6 +14,7 @@
 - 第三方出处查实：design-dna ← zanwei/design-dna（1405⭐）；finesse-ui ← mouse-lin/finesse-skill（435⭐）；finesse-brief ← mouse-lin/finesse-brief——NOTICE/README 来源链接更新。
 - 版权声明：新增根 `LICENSE`（MIT，Copyright (c) 2026 LUJUNDOS）；README 许可章节补版权人。
 - 终审验证：覆盖率实测 100%（标准库 trace，5 脚本）；重复 install 幂等（hooks 不重复挂载）；端到端全流程（install→scaffold→G0 拦截→卸载零残留）通过。
+- 需求追溯矩阵：FR-001~018 全部有实现证据（18/18）+ NFR-01~05 全部满足（validations/run-7.md 记录）。
 
 ## [0.2.2] - 2026-08-13
 
