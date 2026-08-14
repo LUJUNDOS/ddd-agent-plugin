@@ -13,6 +13,7 @@
 - 合规补充：finesse-ui/finesse-brief 补 LICENSE（MIT 模板）；`references/NOTICE.md` 集中声明 3 个第三方 MIT 子目录（版权人/许可/来源/再分发条件）；各 README 与根 README 补来源说明与第三方声明章节。
 - 第三方出处查实：design-dna ← zanwei/design-dna（1405⭐）；finesse-ui ← mouse-lin/finesse-skill（435⭐）；finesse-brief ← mouse-lin/finesse-brief——NOTICE/README 来源链接更新。
 - 版权声明：新增根 `LICENSE`（MIT，Copyright (c) 2026 LUJUNDOS）；README 许可章节补版权人。
+- 终审验证：覆盖率实测 100%（标准库 trace，5 脚本）；重复 install 幂等（hooks 不重复挂载）；端到端全流程（install→scaffold→G0 拦截→卸载零残留）通过。
 
 ## [0.2.2] - 2026-08-13
 
