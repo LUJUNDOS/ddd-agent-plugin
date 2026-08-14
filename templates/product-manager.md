@@ -29,7 +29,7 @@ user-invocable: true
 ## 输入
 
 1. goal-creator 产出的标准化目标（含一句话目标 + boundary + 初步约束）
-2. 项目上下文：读 项目规则文件（`CLAUDE.md`/`CODEBUDDY.md`/`AGENTS.md` 视宿主）了解 DDD 文档链和当前状态
+2. 项目上下文：读 项目规则文件（`CLAUDE.md`/`AGENTS.md` 视宿主）了解 DDD 文档链和当前状态
 3. AI 能力边界表：`references/pm-thinking-guide.md` §AI 能力告知
 
 ## 思考框架（按需加载 `references/pm-thinking-guide.md`）

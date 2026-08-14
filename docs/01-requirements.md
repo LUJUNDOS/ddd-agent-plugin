@@ -72,14 +72,14 @@ related: [00-vision]
 ## 4. MVP 边界
 
 - **不做**：loop 契约（C-\*/T-\*）、debug/evolve/goal skill 的完整形态（仅保留记忆规程）、MCP App / Companion Web App、任何 kb 内容。
-- **宿主范围**：MVP 适配并真机验证 reasonix + claude；codebuddy / codex / cursor 等仅预留 manifest 条目（P1）。
-- **知识边界**：插件不含任何领域知识；经验类内容一律写宿主原生记忆（Reasonix memory / CLAUDE.md / CodeBuddy memory）。
+- **宿主范围**：MVP 适配并真机验证 reasonix + claude；codebuddy 已退役（2026-08-14，manifest retired）、codex / cursor 等仅预留 manifest 条目（P1）。
+- **知识边界**：插件不含任何领域知识；经验类内容一律写宿主原生记忆（Reasonix memory / CLAUDE.md）。
 
 ## 5. Ubiquitous Language（词汇表）
 
 | 词 | 含义 |
 |----|------|
-| 宿主 | 能加载 skill/插件并执行 agent 任务的程序（Reasonix / Claude Code / CodeBuddy 等） |
+| 宿主 | 能加载 skill/插件并执行 agent 任务的程序（Reasonix / Claude Code；CodeBuddy 已退役） |
 | 单一源 | 插件唯一的事实源（manifest + 模板），各宿主镜像由生成器产出 |
 | 记忆规程 | 插件内约定的记忆 schema 与时机规则（不含记忆内容本身） |
 | 纪律 skill | 只声明验收标准、约束 agent 行为的 skill（doc-driven/gate/verify/review/no-fake-test） |

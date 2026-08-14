@@ -31,7 +31,7 @@ ddd-agent-plugin/
 │   ├── uninstall.py
 │   └── ddd_gate.py             # 复用蓝本，随插件分发
 ├── docs/                       # 本项目 DDD 文档链（00~04 + research/）
-├── CLAUDE.md / CODEBUDDY.md    # 项目自身规则
+├── CLAUDE.md                   # 项目自身规则（CodeBuddy 已退役，不再有 CODEBUDDY.md）
 └── .gitignore
 ```
 
@@ -59,7 +59,7 @@ skills:
 hosts:                        # 支持声明（FR-009）
   reasonix: { status: verified, layout: hosts/reasonix/layout.json }
   claude:   { status: verified, layout: hosts/claude/layout.json }
-  codebuddy:{ status: planned }   # P1
+  codebuddy:{ status: retired }  # 2026-08-14 用户弃用 CodeBuddy，不再维护 .codebuddy 宿主
   codex:    { status: planned }   # P1
 ```
 
@@ -191,7 +191,7 @@ claude 宿主：    <proj>/.claude/skills/{doc-driven,gate,verify,review,no-fake
 
 ## 13. v0.2.0 —— references 打包（FR-015）
 
-- `references/` 目录：从中枢 `methods/` 复制 `adversarial-selection.md`、`pm-thinking-guide.md`、`code-review-standard.md`、`doc-driven-dev.md`、`capability-registry.md`、`performance-optimization.md`（6 份；后两者分别为 manifest 补充说明与技术参考层）
+- `references/` 目录：从中枢 `methods/` 复制 `adversarial-selection.md`、`pm-thinking-guide.md`、`code-review-standard.md`、`doc-driven-dev.md`、`capability-registry.md`、`performance-optimization.md`（6 份平铺 + 3 设计子目录；capability-registry 为 manifest 补充说明、performance-optimization 为技术参考层）。
 - 生成器将其拷贝进 dist/<host>/references/，角色 skill 内引用路径改为 `references/<file>`（相对宿主项目）
 - 验收：装到宿主后 references 文件存在，角色 skill 内引用路径可达（AC-9）
 

@@ -35,9 +35,10 @@
 | `evolution-runner` | 跑 evolve draft | 仅 evolve 时 spawn |
 
 ## 4. 双表示纪律
-同一命令逻辑 CodeBuddy（`~/.workbuddy/skills/` 或 `projects/<proj>/.workbuddy/skills/`）与 Claude Code（`.claude/commands/*.md`）各一份，**单一源在 `methods/`**，改一处须同步另一处（由 `/evolve` 或 Housekeeper 提示防漂移）。
+同一命令逻辑 Reasonix（`.reasonix/skills/`，经 ddd-agent-plugin 的 install.py 安装）与 Claude Code / Reasonix 兼容通道（`.claude/skills/`）各一份，**单一源在 `methods/`**，改一处须同步另一处（由 `/evolve` 或 Housekeeper 提示防漂移）。
+> 2026-08-14：CodeBuddy 已退役（`CODEBUDDY.md` / `.codebuddy/` 不再维护），命令部署通道由 `.claude/commands/*.md` 迁移至 `.claude/skills/`（skill 化）+ `.reasonix/skills/`（Reasonix 原生）。
 
 ## 5. 新增能力步骤
 1. 在 `~/.workbuddy/skills/` 或 `projects/<proj>/.workbuddy/skills/` 写薄 SKILL.md（只入口+指针，重内容放 `references/`）。
 2. 本表加一行 + 绑定引用它的契约。
-3. 若是命令，同步 `.claude/commands/*.md`。
+3. 若是命令，同步 `.claude/skills/`（Claude Code / Reasonix 兼容）+ `.reasonix/skills/`（Reasonix 原生，经 ddd-agent-plugin install.py）。

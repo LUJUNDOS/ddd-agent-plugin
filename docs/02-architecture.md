@@ -63,7 +63,7 @@ related: [00-vision, 01-requirements]
 
 ### AD-0003 MVP 宿主范围 = reasonix + claude（依据：FR-009 + 真机铁律）
 - **背景**：插件经理铁律"一个宿主过了不能替另一个背书"；全宿主真机验证成本高。
-- **决策**：架构按任意宿主设计（manifest 声明），MVP 真机验证 reasonix + claude；codebuddy/codex/cursor 仅 manifest 预留（P1）。
+- **决策**：架构按任意宿主设计（manifest 声明），MVP 真机验证 reasonix + claude；codebuddy 已退役（2026-08-14，manifest retired）、codex/cursor 仅 manifest 预留（P1）。
 - **后果**：AC-2/3 只覆盖 2 宿主；其余宿主状态=「未适配」。
 
 ### AD-0004 纪律 skill 对齐蓝本、不发明方法论（依据：对抗判决缓解措施）

@@ -12,7 +12,7 @@ related: [03-design]
 
 - [x] **TASK-0001** 插件骨架 + plugin.manifest.yaml
   - **内容**：建 `plugin.manifest.yaml`（03-design §2 schema：id/version/skills×6/hosts 声明），建 `templates/`、`hosts/`、`dist/` 骨架。
-  - **DoD**：yaml 可解析；skills 6 项、hosts 含 reasonix/claude 声明 verified、codebuddy/codex planned。
+  - **DoD**：yaml 可解析；skills 6 项、hosts 含 reasonix/claude 声明 verified、codebuddy retired、codex planned。
 
 - [x] **TASK-0002** templates/ 6 份 skill 正文
   - **内容**：`templates/{doc-driven,gate,verify,review,no-fake-test,memory-protocol}.md`（03-design §5：frontmatter + 验收标准，结构对齐蓝本）。

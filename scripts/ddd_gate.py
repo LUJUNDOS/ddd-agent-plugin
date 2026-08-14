@@ -370,11 +370,11 @@ def check_precommit(docs_dir, changed):
         if not cl_passed:
             blocked = True
 
-    # 规则 D：DDD 文档有变更 → 提示检查 CLAUDE.md/CODEBUDDY.md 纪律表述是否受影响
+    # 规则 D：DDD 文档有变更 → 提示检查 CLAUDE.md 纪律表述是否受影响（CodeBuddy 已退役，项目级只读 CLAUDE.md）
     if docs_changed:
         msgs.append(
-            "[WARN] docs 变更——请同步检查 CLAUDE.md/CODEBUDDY.md 的 §0 范围速览与角色职责"
-            "表述是否受影响（规则 §1 纪律文档同步检查），受影响则双写修订"
+            "[WARN] docs 变更——请同步检查 CLAUDE.md 的 §0 范围速览与角色职责"
+            "表述是否受影响（规则 §1 纪律文档同步检查），受影响则修订"
         )
 
     # 规则 E：改了 src/ 或 docs/ → 检查 TASK 勾选一致性（WARNING 级，不 BLOCK）

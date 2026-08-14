@@ -195,6 +195,6 @@ user-invocable: true
 | **高工艺构建** | `references/finesse-ui/`（SKILL.md + 12 份） | 配色库（product-palettes）/动效（motion）/防同质（divergence）/页面工艺（page-crafting）/手机端（h5-mobile） |
 | **反廉价审计** | `references/finesse-ui/anti-cheap.md` + `audit.md` | 输出前逐项过"廉价感黑名单" |
 
-- 引用路径相对宿主项目根（`references/...`），与 03-design §13 一致。
+- 引用路径相对宿主项目根（`references/<file>`），与 03-design §13 一致。
 - **HTML 示例与 JS 库不随插件分发**（精选策略）；需要参考实现时向源仓库获取。
 - 设计 DNA 的 JSON 结构见 `references/design-dna/schema.md`；COMP-020 参数可引用 DNA 值并标注来源。

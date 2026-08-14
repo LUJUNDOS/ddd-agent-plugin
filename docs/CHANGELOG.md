@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## [0.2.4] - 2026-08-14
+
+### 变更（CodeBuddy 退役）
+- **CodeBuddy 宿主退役**：用户弃用 CodeBuddy，项目级开发改用 Reasonix。manifest `codebuddy: { status: retired }`；`.codebuddy/` 已从各项目删除（过期 skill 拷贝一并清除）。
+- docs 同步：00-vision（三套→两套镜像）、01-requirements（宿主范围/知识边界/词汇表）、02-architecture（AD-0003 后果）、03-design（目录树 + manifest schema 示例）、04-tasks（TASK-0001 DoD）。
+- templates 同步：goal-creator / product-manager 的「项目规则文件」去掉 CODEBUDDY.md（视宿主读 `CLAUDE.md`/`AGENTS.md`）。
+- references 同步：capability-registry.md 6 份（methods + 5 副本）双表示纪律更新为 Reasonix（`.reasonix/skills/` + `.claude/skills/`）。
+- 机械闸同步：ddd_gate.py 规则 D 提示改为只检查 CLAUDE.md（5 份副本 MD5 一致）。
+
+### 变更（references 引用闭环收口，FR-015/AC-9）
+- **引用路径统一**：6 个角色/纪律 skill（architect/goal/goal-creator/product-manager/review/verify）SKILL.md 内 `methods/<file>` 引用全部改为 `references/<file>`（相对宿主项目根），与 03-design §13 既定设计对齐。
+- 涉及宿主：插件 dist（references/ 平铺 + skill 引用）、_template（.claude/.reasonix 双通道）、synk（.claude/.reasonix 双通道，独立仓库本就有 references/ 镜像）。
+- 中枢侧：根目录 `references/` junction → `methods/`（中枢 skill 引用 references/ 亦可达）。
+
+### 变更（0.2.4 内修正，2026-08-14）
+- **回滚 workbuddy 越权项**：撤销 `references/loop-engineer.md` 补入（loop 属 vision 非目标、无 skill 引用）与 manifest version 0.2.5→0.2.4；03-design §13 回归 6 份平铺说明；README 标注 v0.2.4。80 处 `methods/`→`references/` 引用替换保留（用户认可，FR-015/AC-9 收口）。
+
 ## [0.2.3] - 2026-08-13
 
 ### 新增（设计能力融合，FR-017/018/AC-11）

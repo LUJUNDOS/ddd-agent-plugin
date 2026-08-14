@@ -15,7 +15,7 @@ user-invocable: true
 ## 输入
 
 1. 用户当前对话中的意图描述
-2. 项目状态：读 项目规则文件（`CLAUDE.md`/`CODEBUDDY.md`/`AGENTS.md` 视宿主）了解 DDD 文档链状态、docs/ 各层当前 status（00~04 已 approved 到哪一层）
+2. 项目状态：读 项目规则文件（`CLAUDE.md`/`AGENTS.md` 视宿主）了解 DDD 文档链状态、docs/ 各层当前 status（00~04 已 approved 到哪一层）
 3. 相关 docs：视需要读 `docs/00-vision.md`、`docs/01-requirements.md` 了解模块边界和已有需求
 
 ## 流程
