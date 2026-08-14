@@ -73,3 +73,6 @@ references:
   - references/doc-driven-dev.md
   - references/capability-registry.md
   - references/performance-optimization.md
+  - references/design-dna
+  - references/finesse-ui
+  - references/finesse-brief

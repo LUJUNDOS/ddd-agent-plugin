@@ -40,6 +40,8 @@ related: [00-vision]
 | FR-014 | **scaffold.py 骨架生成**：一键生成 docs/00-vision/01-requirements/02-architecture/03-design/04-tasks 空模板（frontmatter + 章节），自动化代替手动初始化 | A | P0 |
 | FR-015 | **references 打包**：角色 skill 依赖的方法论文档（adversarial-selection / pm-thinking-guide / code-review-standard）随插件分发，装到宿主后引用闭环（可拔插不依赖中枢） | V | P0 |
 | FR-016 | **扫描式自进化（evolution-scan）**：扫描宿主记忆中的 error/decision/insight → 提炼重复模式（≥3 次）→ 晋升宿主记忆长期区 → **退休规则**（长期区条目 30 天未触发 → 退休候选，用户确认后清理）；不改变 memory-protocol 的"记"机制 | V | P0 |
+| FR-017 | **设计能力融合（ui-designer 增强）**：design-dna 全量 + finesse-ui 方法论精华（10-15 份，**不打包 HTML 示例/JS 库**）作为 ui-designer references；ui-designer 具备 DNA 提取/高工艺构建/反廉价审计能力 | V | P0 |
+| FR-018 | **finesse-brief 共享**：方法论核心打包 references，product-manager（范围/结构洞察）与 architect（模块/实体建模）共享引用 | V | P0 |
 
 ## 2. 非功能需求（NFR）
 
@@ -65,6 +67,7 @@ related: [00-vision]
 | AC-8 | 新建项目自动引导：装插件后对"新建项目"触发 bootstrap，自动生成 docs/00~04 骨架 + 引导需求调研启动 | 真机模拟"新建项目"流程 |
 | AC-9 | 角色 skill 链可用：product-manager 等 5 角色 skill 装进宿主后可被触发，references 引用闭环（无外部依赖断链） | 真机触发 + 引用路径检查 |
 | AC-10 | evolution-scan：扫描宿主记忆提炼重复模式（≥3 次晋升）、退休规则（30 天未触发 → 退休候选，须用户确认）、不改 memory-protocol | 真机模拟扫描/晋升/退休流程 |
+| AC-11 | 设计融合：ui-designer references（design-dna/finesse-ui 精选）与 pm/architect 的 finesse-brief 引用在镜像中可达；HTML 示例/JS 库不打包 | 镜像引用闭环检查 + 资产断言 |
 
 ## 4. MVP 边界
 

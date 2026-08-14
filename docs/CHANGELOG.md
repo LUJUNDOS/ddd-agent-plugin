@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## [0.2.3] - 2026-08-13
+
+### 新增（设计能力融合，FR-017/018/AC-11）
+- `references/design-dna/`（全量 4 份：SKILL + generation-guide + schema + LICENSE，MIT）。
+- `references/finesse-ui/`（精选 13 份：SKILL + 12 方法论精华；**不含 HTML 示例/JS 库**）。
+- `references/finesse-brief/`（核心 5 份：SKILL + grammar/system-domain/discovery/starters，共享）。
+- `ui-designer` 增强：DNA 提取 / 高工艺构建 / 反廉价审计三维能力 + references 引用。
+- `product-manager` / `architect`：补 finesse-brief 共享引用（结构分类 / 模块实体建模）。
+- `generate.py` references 拷贝改递归（子目录）；manifest references 加 3 目录；测试扩展（AC-11 资产断言）。
+
 ## [0.2.2] - 2026-08-13
 
 ### 新增

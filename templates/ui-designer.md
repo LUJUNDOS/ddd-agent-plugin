@@ -184,3 +184,17 @@ user-invocable: true
 - [ ] 每个 COMP 是否覆盖了关键状态变体？
 - [ ] 所有 `[inferred]` 值是否已请用户确认？
 - [ ] 变更是否已记录 CHANGELOG？
+
+## 设计能力参考（v0.2.3 融合）
+
+> 以下方法论随插件分发，**按需加载**（`references/<dir>/README.md` 有目录与来源说明）：
+
+| 能力 | references | 触发场景 |
+|------|-----------|---------|
+| **DNA 提取** | `references/design-dna/`（SKILL.md + schema + generation-guide） | 用户给参考图/URL/"设计得像 XX" → 提取三维 DNA（tokens/style/effects）→ 结构化 JSON → 落地 COMP-020 |
+| **高工艺构建** | `references/finesse-ui/`（SKILL.md + 12 份） | 配色库（product-palettes）/动效（motion）/防同质（divergence）/页面工艺（page-crafting）/手机端（h5-mobile） |
+| **反廉价审计** | `references/finesse-ui/anti-cheap.md` + `audit.md` | 输出前逐项过"廉价感黑名单" |
+
+- 引用路径相对宿主项目根（`references/...`），与 03-design §13 一致。
+- **HTML 示例与 JS 库不随插件分发**（精选策略）；需要参考实现时向源仓库获取。
+- 设计 DNA 的 JSON 结构见 `references/design-dna/schema.md`；COMP-020 参数可引用 DNA 值并标注来源。

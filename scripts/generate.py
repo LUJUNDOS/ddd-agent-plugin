@@ -142,11 +142,14 @@ def generate_host(manifest, host, out_dir):
         src = os.path.join(ROOT, s)
         if os.path.isfile(src):
             shutil.copy2(src, os.path.join(scripts_out, os.path.basename(s)))
-    # 拷贝 references（角色 skill 的方法论依赖，03-design §13）
+    # 拷贝 references（角色 skill 的方法论依赖，03-design §13；目录递归拷贝保留子结构）
     refs_out = os.path.join(base, "references")
     for r in manifest.get("references", []):
         src = os.path.join(ROOT, r)
-        if os.path.isfile(src):
+        if os.path.isdir(src):
+            shutil.copytree(src, os.path.join(refs_out, os.path.basename(r)),
+                            dirs_exist_ok=True)
+        elif os.path.isfile(src):
             os.makedirs(refs_out, exist_ok=True)
             shutil.copy2(src, os.path.join(refs_out, os.path.basename(r)))
     # layout 元数据（install 用；不进宿主）

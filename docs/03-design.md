@@ -216,6 +216,18 @@ claude 宿主：    <proj>/.claude/skills/{doc-driven,gate,verify,review,no-fake
   6. 报告：退休/合并/冲突/跨项目提炼四类清单
 - **验收**：产出四类清单；退休须用户确认；不对短期记忆做 ≥3 次晋升（AC-10）
 
+## 17. v0.2.3 —— 设计能力融合（FR-017/018/AC-11）
+
+- **references 子目录结构**：
+  - `references/design-dna/`：全量（SKILL.md + generation-guide.md + schema.md + LICENSE，MIT）
+  - `references/finesse-ui/`：方法论精华 10-15 份（grammar/style-personas/product-palettes/anti-cheap/motion/divergence/component-scope/theming/preflight/page-crafting/h5-mobile/audit 等 + SKILL.md 核心）；**不打包 HTML 示例与 JS 库**（示例资产可溯源获取）
+  - `references/finesse-brief/`：方法论核心 4-6 份（SKILL.md + grammar/system-domain/discovery/starters），product-manager 与 architect 共享引用
+- **skill 增强**：
+  - `ui-designer`：正文补三维能力（DNA 提取 / 高工艺构建 / 反廉价审计）+ references 引用
+  - `product-manager` / `architect`：补 finesse-brief 共享引用（范围结构 / 模块实体建模）
+- **generate.py**：references 拷贝改递归（保留子目录结构）
+- **验收**：镜像 references 子目录可达（AC-11）；HTML/JS 资产断言不打包
+
 ## 14. v0.2.0 —— scaffold.py 接口（FR-014）
 
 ```

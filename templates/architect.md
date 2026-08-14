@@ -168,3 +168,7 @@ user-invocable: true
 - [ ] 技术选型是否基于搜查证据？
 - [ ] 是否声明了产物交接："02 已就绪 → ui-designer 接手 03-design"
 - [ ] 变更是否已记录 CHANGELOG？
+
+## 建模参考（v0.2.3 共享）
+
+> `references/finesse-brief/`（随插件分发）：模块划分与实体建模可引用其 spec schema（purpose/subject/modules/entities 数据模型 + 字段写入者判定）。与 product-manager 共享（其需求范围洞察亦引用此）。

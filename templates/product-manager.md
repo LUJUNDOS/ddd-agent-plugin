@@ -124,3 +124,7 @@ user-invocable: true
 - [ ] 每条 FR 是否有具体的机械验收方法？
 - [ ] 是否有明确的"不做什么"边界？
 - [ ] 所有变更是否已记录到 CHANGELOG？
+
+## 产品结构参考（v0.2.3 共享）
+
+> `references/finesse-brief/`（随插件分发，README 有来源说明）：需求访谈时可用其**结构分类法**（cycle/ledger/state/runbook/feed/care/operation/pipeline/registry/console/monitor）快速对齐"产品是什么"，用 hook/冷启动问题确认范围边界。与 architect 共享此参考（其模块/实体建模亦可引用）。

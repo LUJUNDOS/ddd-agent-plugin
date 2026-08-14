@@ -212,21 +212,31 @@ class TestReferences(unittest.TestCase):
             self.assertIn("doc-driven-dev.md", refs)
             self.assertIn("capability-registry.md", refs)
             self.assertIn("performance-optimization.md", refs)
+            # 子目录（v0.2.3 设计融合）
+            for sub in ("design-dna", "finesse-ui", "finesse-brief"):
+                self.assertTrue(os.path.isdir(
+                    os.path.join(d, "reasonix", "references", sub)),
+                    f"缺 references/{sub}/")
+            # AC-11：HTML 示例/JS 库不打包
+            ui_files = os.listdir(os.path.join(
+                d, "reasonix", "references", "finesse-ui"))
+            self.assertFalse(any(f.endswith(".html") for f in ui_files))
+            self.assertFalse(any(f.endswith(".js") for f in ui_files))
 
     def test_role_skill_refs_resolve(self):
-        """角色 skill 内 `references/X.md` 引用在镜像中可达（闭环）。"""
+        """角色 skill 内 `references/X.md` 引用在镜像中可达（闭环，含子目录）。"""
         with tempfile.TemporaryDirectory() as d:
             for host, sub in (("reasonix", ".reasonix"), ("claude", ".claude")):
                 _generate_once(host, d)
                 base = os.path.join(d, host)
-                for role in ("product-manager", "architect"):
+                for role in ("product-manager", "architect", "ui-designer"):
                     sp = os.path.join(base, sub, "skills", role, "SKILL.md")
                     with open(sp, encoding="utf-8") as f:
                         content = f.read()
-                    for m in re.findall(r"references/([\w\-\.]+)", content):
+                    for m in re.findall(r"references/([\w\-\./]+)", content):
                         self.assertTrue(
-                            os.path.isfile(os.path.join(base, "references", m)),
-                            f"{host}/{role} 引用 references/{m} 但文件缺失")
+                            os.path.exists(os.path.join(base, "references", m)),
+                            f"{host}/{role} 引用 references/{m} 但缺失")
 
 
 class TestMultiHostRoundtrip(unittest.TestCase):
