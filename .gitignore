@@ -39,3 +39,8 @@ Thumbs.db
 # 临时
 .temp/
 *.tmp
+
+# 覆盖率产物（trace/coverage 运行时生成）
+*.cover
+.cover/
+
