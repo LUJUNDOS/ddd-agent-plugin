@@ -10,6 +10,7 @@
 - `product-manager` / `architect`：补 finesse-brief 共享引用（结构分类 / 模块实体建模）。
 - `generate.py` references 拷贝改递归（子目录）；manifest references 加 3 目录；测试扩展（AC-11 资产断言）。
 - 交付收尾：manifest version 0.2.2→0.2.3；README 特性表补"设计能力"行 + 版本标注 v0.2.3；04-tasks 补 TASK-0017；validations/run-7.md；中枢日志 R-0016。
+- 合规补充：finesse-ui/finesse-brief 补 LICENSE（MIT 模板）；`references/NOTICE.md` 集中声明 3 个第三方 MIT 子目录（版权人/许可/来源/再分发条件）；各 README 与根 README 补来源说明与第三方声明章节。
 
 ## [0.2.2] - 2026-08-13
 

@@ -79,3 +79,7 @@ dist/                     生成产物（不入库）
 ## 许可
 
 MIT。以 `Projects_dev` 蓝本纪律 skill 内容为基准（AD-0004），结构对齐社区 SDD 插件范式（`docs/research/competitors.md`）。
+
+## 第三方内容声明
+
+`references/design-dna/`、`references/finesse-ui/`、`references/finesse-brief/` 为**第三方 MIT 许可资产**（非本插件原创），随插件再分发。完整声明（版权人/许可/来源/再分发条件）见 `references/NOTICE.md`。如你知晓其原始发布仓库，请更新 NOTICE 中的来源链接。

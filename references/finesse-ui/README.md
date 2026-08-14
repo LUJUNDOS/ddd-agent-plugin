@@ -1,6 +1,7 @@
 # references/finesse-ui —— 高工艺 UI 构建方法论（精选打包）
 
-> **来源**：synk 项目 `.reasonix/skills/finesse-ui/`（作者自有资产，SKILL.md 头部声明 license: MIT）。
+> **来源**：synk 项目 `.reasonix/skills/finesse-ui/`（第三方 MIT 资产，原始发布仓库不可考；版权 Copyright (c) 2026 the finesse authors，见本目录 LICENSE 与 `../NOTICE.md`）。
+> **许可**：MIT（SKILL 头部声明 + 本目录 LICENSE）。
 > **精选策略（FR-017）**：只打包方法论精华，**不含 HTML 示例（24 份）与 JS 库（gsap/ScrollTrigger）**——示例资产为静态参考实现，需要时从源仓库获取。
 
 ## 内容（13 份）
