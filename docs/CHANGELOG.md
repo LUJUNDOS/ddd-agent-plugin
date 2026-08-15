@@ -8,6 +8,7 @@
 - `hosts/<host>/layout.json` 增 `agents` 声明；verifier 子代理定义随镜像分发（claude：`.claude/agents/verifier.md`；reasonix：task-spawn profile=verify）。
 - `generate.py`：agents 定义拷贝进镜像。
 - manifest skills 14→15；version 0.2.4→0.2.5；需求 FR-019/AC-12；03-design §18。
+- 交付收尾：04-tasks 补 TASK-0018；README 15 skill + 调度传动特性行；03-design §12 skill 表补 goal-executor；validations/run-8.md；中枢日志 R-0017。
 
 ## [0.2.4] - 2026-08-14
 
