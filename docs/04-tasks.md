@@ -84,3 +84,9 @@ related: [03-design]
 - [x] **TASK-0017** 设计能力融合
   - **内容**：references 3 子目录（design-dna 全量 5 份 / finesse-ui 精选 13 份 / finesse-brief 核心 5 份 + README 来源说明）；ui-designer 增强（DNA/高工艺/反廉价审计）+ pm/architect 共享引用；generate 递归拷贝；manifest version 0.2.3。
   - **DoD**：镜像子目录可达（AC-11）；无 html/js 资产；引用闭环含子目录；16 测试全绿；manifest version 0.2.3。
+
+## v0.2.5（调度传动：goal-executor，FR-019/AC-12）
+
+- [x] **TASK-0018** goal-executor 调度传动
+  - **内容**：templates/goal-executor.md（自驱循环/并行 worktree/重试停滞/active-goal 恢复/verifier 子代理指引）；memory-protocol 加 active-goal 事件；hosts agents 声明 + verifier 定义（claude .claude/agents/verifier.md / reasonix task-spawn）；generate 拷贝 agents；manifest skills 15 + version 0.2.5。
+  - **DoD**：15 skill 入镜像；claude verifier agent 可达；drift 0；16 测试全绿；AC-12 真机模拟（循环/恢复/并行指引完整）。

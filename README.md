@@ -14,6 +14,7 @@
 | 📐 DDD 方法论 | 7 个纪律 skill：`doc-driven`（闸门）/ `gate`（结构闸）/ `verify`（行为真证）/ `review`（收口）/ `no-fake-test`（测试真实性）/ `debug`（调试纪律）+ 机械闸 |
 | 🧠 知识剥离 | 插件不携带任何 kb 内容；`memory-protocol` skill 约定"何时记/记什么/如何回溯"，经验写入宿主原生记忆（Reasonix memory / CLAUDE.md） |
 | 🔄 自进化 | `evolution-scan` skill：维护宿主记忆长期区——退休（30 天未触发 → 用户确认清理）/ 合并去重 / 冲突检测 / 跨项目提炼；晋升（≥3 次）由 memory-protocol 负责，两 skill 不重复 |
+| ⚙️ 调度传动 | `goal-executor` skill：自动跑完一个目标——5 领域工位自驱串联 + 并行（git worktree + 宿主并行 spawn）+ 重试/停滞控制 + active-goal 跨会话恢复 + verifier 子代理隔离验证 |
 | 🎨 设计能力 | `ui-designer` 融合 design-dna（DNA 提取）+ finesse-ui（高工艺/反廉价审计）方法论；`product-manager`/`architect` 共享 finesse-brief（结构分类/实体建模） |
 | 📚 自带方法论 | `references/` 打包 6 份平铺方法论 + 3 个设计子目录（design-dna/finesse-ui/finesse-brief），装到宿主后引用闭环 |
 
@@ -53,7 +54,7 @@ python scripts/ddd_gate.py check-tasks docs   # 任务勾选核对
 
 ```
 plugin.manifest.yaml      单一源：元数据 + skill 清单（13）+ 宿主声明 + references
-templates/                14 份宿主无关 skill 正文（bootstrap/5 角色/7 纪律/memory-protocol/evolution-scan，{{SKILL_NAME}} 占位符） 纪律，{{SKILL_NAME}} 占位符）L_NAME}} 占位符）
+templates/                15 份宿主无关 skill 正文（bootstrap/goal-executor/5 角色/7 纪律/memory-protocol/evolution-scan，{{SKILL_NAME}} 占位符） 角色/7 纪律/memory-protocol/evolution-scan，{{SKILL_NAME}} 占位符） 纪律，{{SKILL_NAME}} 占位符）L_NAME}} 占位符）
 references/               6 份平铺方法论 + 3 设计子目录（design-dna/finesse-ui/finesse-brief，随镜像分发）
 hosts/<host>/layout.json  per-host 适配（目录布局 + frontmatter 规则）
 scripts/                  generate / drift_check / install / uninstall / scaffold / ddd_gate / claude_gate_hook / scaffold / ddd_gate
