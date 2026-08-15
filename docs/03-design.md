@@ -228,6 +228,22 @@ claude 宿主：    <proj>/.claude/skills/{doc-driven,gate,verify,review,no-fake
 - **generate.py**：references 拷贝改递归（保留子目录结构）
 - **验收**：镜像 references 子目录可达（AC-11）；HTML/JS 资产断言不打包
 
+## 18. v0.2.5 —— goal-executor 调度传动（FR-019/AC-12）
+
+- **定位**：把 5 个领域工位（goal-creator/product-manager/architect/ui-designer/pm）从"手动触发串联"升级为"自动自驱循环"；不新增领域角色，只加"传动机制"。
+- **单任务模式**（`templates/goal-executor.md`）：
+  ```
+  启动 → 检查 active-goal（有则恢复，无则新建）
+  → [循环] 当前工位执行 → ddd_gate 自查 → 验证（verify 纪律或 spawn verifier）
+    → 通过 → 更新 active-goal → 下一工位
+    → 失败 → 记录负面 → 重试 ≤3 → 仍败 → 停报阻塞
+  → 全工位完成 → 收口报告
+  ```
+- **并行模式**：pm 拆出可并行组（文件无交叉）→ 每组 `git worktree add` 独立分支 → 宿主并行 spawn executor → 全部完成后验证 + merge。
+- **跨会话**：`memory-protocol` 扩展 `active-goal` 事件（goal/current_stage/next_action/blockers）；新会话记忆检索命中 → 自动恢复。
+- **agents/ 定义**：`hosts/<host>/layout.json` 增 `agents` 声明；verifier 子代理定义随镜像分发（reasonix/claude；codex planned）。
+- **验收**：单任务循环/并行/恢复真机模拟 + 镜像 agents 断言（AC-12）
+
 ## 14. v0.2.0 —— scaffold.py 接口（FR-014）
 
 ```

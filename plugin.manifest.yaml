@@ -2,13 +2,16 @@
 # 规则真源：docs/03-design.md（approved）。改动须走 DDD 流程。
 id: ddd-agent-plugin
 name: DDD Agent Plugin
-version: 0.2.4
+version: 0.2.5
 license: MIT
 description: "DDD 方法论可拔插 agent 插件：新建项目自动引导 + 5 角色流程 skill + 6 纪律 skill + 机械闸。装上=任何 agent 获得 G0~G3 全流程；拔下=宿主无残留；经验自进化沉淀在宿主原生记忆。"
 skills:
   - id: bootstrap
     title: 新建项目 DDD 自动引导
     description: "新建项目 DDD 自动引导：建项目自动生成 docs/00~04 骨架 + 询问是否启动需求调研 + 选后当场启动 product-manager，直接走流程。"
+  - id: goal-executor
+    title: 调度传动
+    description: "调度传动：单 agent 自驱循环（5 领域工位自动串联）+ 并行模式（git worktree 多分支 + 宿主并行 spawn）+ 重试/停滞控制 + active-goal 跨会话恢复；验证环节可选 spawn verifier 子代理。"
   - id: goal-creator
     title: 目标标准化
     description: "把模糊的开发意图转换成可自证验收的 DDD 目标（每条 DoD 有机械验证方法）。"

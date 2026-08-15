@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [0.2.5] - 2026-08-14
+
+### 新增（goal-executor 调度传动，FR-019/AC-12）
+- `templates/goal-executor.md`：单 agent 自驱循环（5 领域工位自动串联）+ 并行模式（pm 并行组 → git worktree 多分支 + 宿主并行 spawn）+ 重试/停滞控制（≤3 连败即停 + max_iter + 停滞检测）+ active-goal 跨会话恢复；验证环节可选 spawn verifier 子代理（上下文隔离）。
+- `memory-protocol` 扩展：新增 `active-goal` 事件类型（goal/current_stage/next_action/blockers）。
+- `hosts/<host>/layout.json` 增 `agents` 声明；verifier 子代理定义随镜像分发（claude：`.claude/agents/verifier.md`；reasonix：task-spawn profile=verify）。
+- `generate.py`：agents 定义拷贝进镜像。
+- manifest skills 14→15；version 0.2.4→0.2.5；需求 FR-019/AC-12；03-design §18。
+
 ## [0.2.4] - 2026-08-14
 
 ### 变更（CodeBuddy 退役）

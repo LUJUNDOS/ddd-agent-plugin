@@ -19,6 +19,7 @@ description: {{SKILL_DESC}}
 error:    { symptom, root_cause, fix, verified_by, date }
 decision: { context, options, chosen, rationale, date }
 insight:  { topic, takeaway, applies_to }
+active-goal: { goal, current_stage, next_action, blockers, date }
 ```
 
 ## 如何回溯（验收标准）
@@ -26,6 +27,7 @@ insight:  { topic, takeaway, applies_to }
 - 同类 error 第二次出现：若记忆中有 fix，直接复用，不重复诊断。
 - 同类事件发生 ≥3 次：视为该宿主环境的高频模式，写入宿主记忆的长期区（如 CLAUDE.md 固定条目）。
 - 长期区条目的维护（退休/合并/冲突/跨项目提炼）由 `evolution-scan` 负责（本 skill 只做记与晋升，不越权维护）。
+- **active-goal（v0.2.5）**：进行中的目标用 `active-goal` 事件记录（goal/current_stage/next_action/blockers），由 `goal-executor` 每工位完成时更新；新会话检索命中即恢复。
 
 ## 判违规
 - 把经验写回插件包内（kb/ 或 templates/）→ 拒。插件是稳定规程，不是存储。

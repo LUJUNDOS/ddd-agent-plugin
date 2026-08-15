@@ -155,6 +155,16 @@ def generate_host(manifest, host, out_dir):
     # layout 元数据（install 用；不进宿主）
     with open(os.path.join(base, "layout.json"), "w", encoding="utf-8") as f:
         json.dump(layout, f, ensure_ascii=False, indent=2)
+    # agents 子代理定义（03-design §18：verifier 随镜像分发）
+    for ag_name, ag_cfg in (layout.get("agents") or {}).items():
+        src = ag_cfg.get("src")
+        if not src:
+            continue
+        sp = os.path.join(ROOT, "hosts", host, src)
+        if os.path.isfile(sp):
+            dp = os.path.join(base, ag_cfg["dest"])
+            os.makedirs(os.path.dirname(dp), exist_ok=True)
+            shutil.copy2(sp, dp)
     return base
 
 

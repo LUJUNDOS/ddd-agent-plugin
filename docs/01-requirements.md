@@ -42,6 +42,7 @@ related: [00-vision]
 | FR-016 | **扫描式自进化（evolution-scan）**：扫描宿主记忆中的 error/decision/insight → 提炼重复模式（≥3 次）→ 晋升宿主记忆长期区 → **退休规则**（长期区条目 30 天未触发 → 退休候选，用户确认后清理）；不改变 memory-protocol 的"记"机制 | V | P0 |
 | FR-017 | **设计能力融合（ui-designer 增强）**：design-dna 全量 + finesse-ui 方法论精华（10-15 份，**不打包 HTML 示例/JS 库**）作为 ui-designer references；ui-designer 具备 DNA 提取/高工艺构建/反廉价审计能力 | V | P0 |
 | FR-018 | **finesse-brief 共享**：方法论核心打包 references，product-manager（范围/结构洞察）与 architect（模块/实体建模）共享引用 | V | P0 |
+| FR-019 | **goal-executor 调度传动（v0.2.5）**：单 agent 自驱循环（5 领域工位自动串联：目标→需求→架构→设计→任务→执行→验证→收口）+ 并行模式（pm 并行组 → git worktree 多分支 + 宿主并行 spawn）+ 重试/停滞控制（≤3 连败即停 + max_iter）+ active-goal 跨会话恢复；验证环节可选 spawn verifier 子代理（上下文隔离） | V | P0 |
 
 ## 2. 非功能需求（NFR）
 
@@ -68,6 +69,7 @@ related: [00-vision]
 | AC-9 | 角色 skill 链可用：product-manager 等 5 角色 skill 装进宿主后可被触发，references 引用闭环（无外部依赖断链） | 真机触发 + 引用路径检查 |
 | AC-10 | evolution-scan：扫描宿主记忆提炼重复模式（≥3 次晋升）、退休规则（30 天未触发 → 退休候选，须用户确认）、不改 memory-protocol | 真机模拟扫描/晋升/退休流程 |
 | AC-11 | 设计融合：ui-designer references（design-dna/finesse-ui 精选）与 pm/architect 的 finesse-brief 引用在镜像中可达；HTML 示例/JS 库不打包 | 镜像引用闭环检查 + 资产断言 |
+| AC-12 | goal-executor：单任务自驱循环跑通（5 工位自动串联）+ 并行组多 worktree 执行 + 重试停滞控制 + active-goal 跨会话恢复；verifier 子代理定义随镜像分发（reasonix/claude） | 真机模拟循环/并行/恢复 + 镜像 agents 断言 |
 
 ## 4. MVP 边界
 

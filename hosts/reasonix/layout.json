@@ -14,5 +14,8 @@
       "command": "python ${workspaceFolder}/scripts/claude_gate_hook.py"
     }
   },
-  "notes": "Reasonix 从项目 .reasonix/skills/<name>/SKILL.md 发现技能；hooks 从 .reasonix/settings.json 自动加载（PreToolUse 为 blocking 事件，exit 2 拦截写码）。matcher 为 anchored regex，须用 Reasonix 实际工具名（edit_file/write_file 等，小写下划线）而非 Claude 的 Edit/Write 格式。"
+  "agents": {
+    "verifier": { "mode": "task-spawn", "profile": "verify" }
+  },
+  "notes": "Reasonix 从项目 .reasonix/skills/<name>/SKILL.md 发现技能；hooks 从 .reasonix/settings.json 自动加载（PreToolUse 为 blocking 事件，exit 2 拦截写码）。matcher 为 anchored regex，须用 Reasonix 实际工具名（edit_file/write_file 等，小写下划线）而非 Claude 的 Edit/Write 格式。verifier 子代理经 task spawn（profile=verify skill，独立上下文）。"
 }
