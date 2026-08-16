@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## [0.2.6] - 2026-08-16
+
+### 新增（evolution-scan 同步中枢 EVOLUTION.md §5/§7 护栏）
+- `templates/evolution-scan.md`「职责 2 退休」新增**日志窗口护栏**：退休候选进入提案主表前须确认连续日志（error/decision 记录）≥1 周；窗口不足（空跑/稀疏/仅 1 天）→ 候选仅作参考、不进提案主表。
+- `templates/evolution-scan.md` 新增「已知限制 / L4 候选」：登记退休判定的引用检测为逐字/关键词级（与真实遵守无语义关联），中文主导 + 日志稀疏时产噪（中枢实测 synk 43 规则 + 仅 1 天日志 → 3 假阳性，命中 G3 验收/并行 worktree/验证器隔离等核心闸门）；缓解 = 日志窗口护栏，根治 = L4 行动语义匹配（触发器绑定/行为事件/embedding）待评估。
+- `plugin.manifest.yaml` evolution-scan `description` 补护栏摘要（随 generate 进入 dist frontmatter）。
+### 变更
+- manifest version 0.2.5 → 0.2.6；dist/{reasonix,claude} 重新 generate 同步；drift_check 0 差异。
+- `docs/02-architecture.md`：蓝本路径引用简写 `projects/_template/.claude/skills/` → `_template/.claude/skills/`（与中枢 §3 落点表述一致）。
+- `docs/04-tasks.md`：登记 v0.2.6 段 TASK-0019（evolution-scan 护栏+已知限制）/ TASK-0020（run-checks 编码健壮性），验收见 `validations/run-9.md`。
+- `scripts/run-checks.py`：子进程统一加 `-X utf8` + 自身 stdout/stderr reconfigure UTF-8（Windows GBK 控制台下 ✓ 打印不崩；此前 GBK 下 5 组件全误报 FAIL）。
+- 触发：中枢体检 evolution_scan 核实（对应用户 2026-08-16 中枢 EVOLUTION.md 同源改动）。
+
 ## [0.2.5] - 2026-08-14
 
 ### 新增（goal-executor 调度传动，FR-019/AC-12）

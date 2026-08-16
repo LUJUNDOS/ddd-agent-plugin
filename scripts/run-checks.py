@@ -13,14 +13,20 @@ import os
 import subprocess
 import sys
 
+# Windows GBK 控制台下强制 UTF-8 输出（✓ 等字符不崩）
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 CHECKS = [
-    ("ddd_gate: gates", ["python", "scripts/ddd_gate.py", "gates", "docs", "--strict"]),
-    ("ddd_gate: check-tasks", ["python", "scripts/ddd_gate.py", "check-tasks", "docs"]),
-    ("ddd_gate: check-changelog", ["python", "scripts/ddd_gate.py", "check-changelog", "docs"]),
-    ("drift_check", ["python", "scripts/drift_check.py"]),
-    ("tests", ["python", "tests/test_plugin.py"]),
+    # -X utf8：子进程在 GBK 控制台下打印 ✓ 不崩（Windows 环境编码健壮性）
+    ("ddd_gate: gates", [sys.executable, "-X", "utf8", "scripts/ddd_gate.py", "gates", "docs", "--strict"]),
+    ("ddd_gate: check-tasks", [sys.executable, "-X", "utf8", "scripts/ddd_gate.py", "check-tasks", "docs"]),
+    ("ddd_gate: check-changelog", [sys.executable, "-X", "utf8", "scripts/ddd_gate.py", "check-changelog", "docs"]),
+    ("drift_check", [sys.executable, "-X", "utf8", "scripts/drift_check.py"]),
+    ("tests", [sys.executable, "-X", "utf8", "tests/test_plugin.py"]),
 ]
 
 

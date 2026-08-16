@@ -354,5 +354,72 @@ class TestHooks(unittest.TestCase):
             self.assertFalse(os.path.isfile(sp))  # 原本不存在 → 删除
 
 
+class TestGateHookInject(unittest.TestCase):
+    """claude_gate_hook.py 对两种宿主注入格式的解析与拦截（AC-3 扩展）。
+
+    Claude Code 注入 tool_input={"file_path": ...}；Reasonix 注入
+    tool_input={"path": ...}（小写工具名对应参数）。两者都必须被识别，
+    且「src 改动而 03-design 未 approved」须 exit 2 拦截。
+    """
+
+    HOOK = os.path.join(ROOT, "scripts", "claude_gate_hook.py")
+
+    def _invoke(self, rel_tgt, key, docs):
+        """在临时项目 <proj>/ 下构造 rel_tgt 目标文件与 docs/ 文档，
+        注入 {key: <proj>/rel_tgt} 到 hook stdin，返回退出码。"""
+        import subprocess
+        with tempfile.TemporaryDirectory() as tmp:
+            proj = os.path.join(tmp, "proj")
+            tgt = os.path.join(proj, rel_tgt)
+            os.makedirs(os.path.dirname(tgt), exist_ok=True)
+            with open(tgt, "w", encoding="utf-8") as f:
+                f.write("")
+            docs_dir = os.path.join(proj, "docs")
+            os.makedirs(docs_dir, exist_ok=True)
+            for name, status in docs.items():
+                with open(os.path.join(docs_dir, name),
+                          "w", encoding="utf-8") as f:
+                    f.write(f"---\nstatus: {status}\n---\n")
+            payload = json.dumps(
+                {"tool_name": "Edit", "tool_input": {key: tgt}})
+            r = subprocess.run([sys.executable, self.HOOK],
+                               input=payload, capture_output=True,
+                               text=True, cwd=tmp)
+            return r.returncode
+
+    def test_reasonix_path_param_blocks_draft(self):
+        """Reasonix path 参数 + 03-design draft → exit 2 拦截。"""
+        code = self._invoke("src/mod.py", "path",
+                            {"03-design.md": "draft"})
+        self.assertEqual(code, 2)
+
+    def test_reasonix_path_param_allows_approved(self):
+        """Reasonix path 参数 + 03-design approved → exit 0 放行。"""
+        code = self._invoke("src/mod.py", "path",
+                            {"03-design.md": "approved"})
+        self.assertEqual(code, 0)
+
+    def test_claude_file_path_param_blocks_draft(self):
+        """Claude Code file_path 参数 + 03-design draft → exit 2 拦截。"""
+        code = self._invoke("src/mod.py", "file_path",
+                            {"03-design.md": "draft"})
+        self.assertEqual(code, 2)
+
+    def test_no_path_fail_open(self):
+        """无路径参数 → fail-open exit 0（不卡死宿主）。"""
+        import subprocess
+        payload = json.dumps({"tool_name": "Edit", "tool_input": {}})
+        r = subprocess.run([sys.executable, self.HOOK],
+                           input=payload, capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0)
+
+    def test_docs_downstream_blocked_by_upstream(self):
+        """下游 04-tasks 已 approved 但上游 03-design draft → exit 2。"""
+        code = self._invoke(
+            "docs/04-tasks.md", "path",
+            {"03-design.md": "draft", "04-tasks.md": "approved"})
+        self.assertEqual(code, 2)
+
+
 if __name__ == "__main__":
     unittest.main()

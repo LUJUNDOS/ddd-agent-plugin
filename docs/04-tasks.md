@@ -90,3 +90,12 @@ related: [03-design]
 - [x] **TASK-0018** goal-executor 调度传动
   - **内容**：templates/goal-executor.md（自驱循环/并行 worktree/重试停滞/active-goal 恢复/verifier 子代理指引）；memory-protocol 加 active-goal 事件；hosts agents 声明 + verifier 定义（claude .claude/agents/verifier.md / reasonix task-spawn）；generate 拷贝 agents；manifest skills 15 + version 0.2.5。
   - **DoD**：15 skill 入镜像；claude verifier agent 可达；drift 0；16 测试全绿；AC-12 真机模拟（循环/恢复/并行指引完整）。
+
+## v0.2.6（evolution-scan 同步中枢护栏 + run-checks 编码健壮性）
+
+- [x] **TASK-0019** evolution-scan 日志窗口护栏 + 已知限制/L4 候选
+  - **内容**：templates/evolution-scan.md「职责 2 退休」新增 ≥1 周连续日志窗口护栏（不足则候选仅作参考、不进提案主表）；新增「已知限制 / L4 候选」段（退休判定为逐字/关键词级命中、与真实遵守无语义关联；中枢实测 synk 43 规则 + 1 天日志 → 3 假阳性命中 G3 验收/并行 worktree/验证器隔离；缓解=护栏、根治=L4 行动语义匹配）；manifest evolution-scan description 补护栏摘要 + version 0.2.6；02-architecture 蓝本路径简写。
+  - **DoD**：dist/{reasonix,claude} evolution-scan 同步护栏与已知限制（同 hash）；drift 0；run-checks 全量通过（21 测试）。
+- [x] **TASK-0020** run-checks 编码健壮性
+  - **内容**：scripts/run-checks.py 子进程统一 `-X utf8` + 自身 stdout/stderr reconfigure UTF-8（Windows GBK 控制台下 ✓ 打印不崩）。
+  - **DoD**：GBK 控制台下 run-checks 全量通过（此前 5 组件因编码误报 FAIL）。

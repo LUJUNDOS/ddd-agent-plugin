@@ -75,7 +75,7 @@ related: [00-vision, 01-requirements]
 
 | 组件 | 复用来源 | 复用部分 | 改造量 | 工作量估算 | 风险 |
 |------|---------|---------|--------|-----------|------|
-| 5 纪律 skill 内容 | 蓝本 `projects/_template/.claude/skills/` | SKILL.md 正文（doc-driven/gate/verify/review/no-fake-test） | 小幅改造（frontmatter 参数化） | 0.5 人日 | 低（已验证） |
+| 5 纪律 skill 内容 | 蓝本 `_template/.claude/skills/` | SKILL.md 正文（doc-driven/gate/verify/review/no-fake-test） | 小幅改造（frontmatter 参数化） | 0.5 人日 | 低（已验证） |
 | 机械闸 | 蓝本 `scripts/ddd_gate.py` | 完整脚本 | 开箱即用（随插件分发） | 0 | 低（纯标准库） |
 | 记忆分类范式 | MCP memory server system prompt | 身份/行为/偏好/目标/关系分类 | 对齐参照（不复制代码） | 0.5 人日 | 中（宿主记忆机制差异） |
 | 单一源+生成器 | 无现成复用 | — | 全新开发 | 1-2 人日 | 中（模板引擎选择） |

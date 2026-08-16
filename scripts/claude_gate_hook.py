@@ -26,7 +26,8 @@ def main():
     except Exception:
         sys.exit(0)  # 解析失败不拦（fail-open，避免卡死）
     tool_input = data.get("tool_input", {})
-    path = tool_input.get("file_path", "")
+    # 兼容两种宿主注入格式：Claude Code 用 file_path，Reasonix 用 path
+    path = tool_input.get("file_path", "") or tool_input.get("path", "")
     if not path:
         sys.exit(0)
 
