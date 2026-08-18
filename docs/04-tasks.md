@@ -99,3 +99,12 @@ related: [03-design]
 - [x] **TASK-0020** run-checks 编码健壮性
   - **内容**：scripts/run-checks.py 子进程统一 `-X utf8` + 自身 stdout/stderr reconfigure UTF-8（Windows GBK 控制台下 ✓ 打印不崩）。
   - **DoD**：GBK 控制台下 run-checks 全量通过（此前 5 组件因编码误报 FAIL）。
+
+## v0.2.7（需求层对抗同步中枢：references + product-manager 模板）
+
+- [x] **TASK-0021** 需求层对抗同步中枢（8-18 版）
+  - **内容**：`references/adversarial-selection.md` 同步中枢 methods 8-18 版（§0 适用范围扩展 / §5 需求层 G0 / §6 删豁免改 §7 / 新增 §7 需求层变体 + 需求层七维度 + 落盘 `docs/research/requirements/`）；`templates/product-manager.md` 加铁律 5 + Step 2.5（可行性调研 → 对抗 → 法官定案 → 单候选豁免）+ 自检 +2 + 输出加 adversarial 文档；manifest version 0.2.7。
+  - **DoD**：dist/{reasonix,claude} 的 product-manager 含铁律 5/Step 2.5 且 references/adversarial-selection.md 含 §7（与中枢 methods 同 hash）；drift 0；run-checks 全量通过（21 测试）。
+- [x] **TASK-0022** 设计层对抗同步中枢（0.2.7 内补全）
+  - **内容**：`references/adversarial-selection.md` 补 §7.1 设计层对抗变体（信息架构/导航范式/状态呈现方式等实质性决策、设计层七维度、落盘 `docs/research/design/`、纯美学豁免）；`templates/ui-designer.md` 加铁律 7 + Step 0.5 + 自检 +2 + 输出加 `docs/research/design/`；同步传播到 `.workbuddy`/`_template`（.claude/.reasonix）/dist/synk；插件 CLAUDE.md §3 补产品经理对抗行 + 通用对抗纪律 MUST。
+  - **DoD**：dist/{reasonix,claude} 的 ui-designer 含铁律 7/Step 0.5 且 references 含 §7.1（与中枢 methods 同 hash）；drift 0；run-checks 全量通过（21 测试）。

@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## [0.2.7] - 2026-08-18
+
+### 变更（需求层对抗同步中枢，FR-015 扩展）
+- `references/adversarial-selection.md` 同步中枢 `methods/adversarial-selection.md`（8-18 版）：§0 适用范围扩展（任一 DDD 层 2+ 候选关键决策均须对抗）、§5 需求层对抗（G0 阶段，文档挂 00/01）、§6 重写（删除 product-manager/ui-designer 显式豁免，改为需求层/设计层 2+ 候选分别由 PM/ui-designer 走 §7，纯视觉/纯美学主观项豁免）、新增 §7 需求层对抗变体（角色配置 / 需求层七维度 / 落盘 `docs/research/requirements/` / 单候选注「唯一可行路径 + 理由」）。
+- `templates/product-manager.md` 同步中枢 `.workbuddy/skills/product-manager/SKILL.md`（8-18 版）：核心原则加铁律 5（2+ 候选关键需求决策必须走需求层对抗）、工作流加 Step 2.5（可行性调研 → 对抗 → 法官定案 → 单候选豁免）、自检清单 +2 条、输出列加 `docs/research/requirements/<topic>-adversarial.md`。
+- 同步基准说明：方法论细节单源在 `references/adversarial-selection.md` §7（skill 内联引用，避免漂移）；插件侧统一以中枢 8-18 版为基准，路径适配 `references/`（宿主分发形态）。
+- manifest version 0.2.6 → 0.2.7；dist/{reasonix,claude} 重新 generate 同步；drift_check 0 差异；run-checks 全量通过（21 测试）。
+
+### 变更（设计层对抗同步中枢，0.2.7 内补全）
+- `references/adversarial-selection.md` 补 §7.1 设计层对抗变体（ui-designer / 03 阶段）：适配场景（信息架构 / 导航范式 / 状态呈现方式 / 页面结构等实质性决策）、角色配置（法官 = ui-designer）、设计层七维度（用户可达性 / 认知负荷 / 平台一致性 / 实现成本 / 可演进性 / 状态覆盖 / 验收可证明）、落盘 `docs/research/design/`、单候选注「唯一可行路径 + 理由」、纯视觉/纯美学主观项豁免；文件头用途行与 §0 引用更新为 §7/§7.1。
+- `templates/ui-designer.md` 同步中枢 `.workbuddy/skills/ui-designer/SKILL.md`：核心原则加铁律 7（实质性设计决策 2+ 候选须走设计层对抗）、工作流加 Step 0.5（识别 → 对抗 → 法官定案 → 单候选豁免 → 纯美学豁免）、自检清单 +2 条、输出列加 `docs/research/design/<topic>-adversarial.md`；路径适配 `references/`，保留「设计能力参考」节。
+- 同步传播：中枢 `.workbuddy` + `_template`（.claude/.reasonix）+ 插件 dist + `projects/synk`（脚手架传播，消除其悬空引用）。
+- 此前的「未覆盖」说明已落实，移除。
+
 ## [0.2.6] - 2026-08-16
 
 ### 新增（evolution-scan 同步中枢 EVOLUTION.md §5/§7 护栏）

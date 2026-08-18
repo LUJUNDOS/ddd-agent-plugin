@@ -1,6 +1,6 @@
 # ddd-agent-plugin —— DDD 方法论可拔插 Agent 插件
 
-> 以 `Projects_dev` 中枢为蓝本的可拔插 Skill Plugin：**装上 = 任何 agent 获得 DDD G0~G3 全流程；拔下 = 宿主无残留；经验自进化沉淀在宿主原生记忆（插件零知识库负担）。** 当前版本 **v0.2.6**。
+> 以 `Projects_dev` 中枢为蓝本的可拔插 Skill Plugin：**装上 = 任何 agent 获得 DDD G0~G3 全流程；拔下 = 宿主无残留；经验自进化沉淀在宿主原生记忆（插件零知识库负担）。** 当前版本 **v0.2.7**。
 
 ## 特性
 

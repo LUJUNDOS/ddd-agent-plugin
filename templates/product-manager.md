@@ -20,6 +20,8 @@ user-invocable: true
 
 **铁律 4：每条 DoD 必须可机械验证。** 禁止"体验好""响应快""代码整洁"等主观标准。
 
+**铁律 5：关键需求决策须走需求层对抗。** 产品形态 / 感知范围 / 记忆载体 / 预判深度 / 范围边界等出现 2+ 候选时，必须走需求层法庭式对抗（红队 + 法官，3+ 候选加代言人 + 集成评估师），产出对抗文档到 `docs/research/requirements/`。单候选须注明「唯一可行路径 + 理由」。规程见 `references/adversarial-selection.md` §7。
+
 ## 前置条件
 
 - goal-creator 已完成目标标准化（或用户直接用自然语言表达意图 + goal-creator 内联完成）
@@ -85,6 +87,17 @@ user-invocable: true
 2. 地基门禁：阶段 1-3 全部过关后提示用户"地基已确认，现在进入功能细节"
 3. 阶段 4-7：按模块/功能逐项确认，每条 FR 分配 P0/P1/P2，写可机械验证的验收标准
 
+### Step 2.5: 需求层对抗选型（关键需求决策 2+ 候选时）
+
+当七阶段访谈中识别出 2+ 候选的关键需求决策（产品形态 / 感知范围 / 记忆载体 / 预判深度 / 范围边界等），不凭意图直接落笔，走需求层法庭式对抗：
+
+1. **可行性调研**：对候选做轻量事实记录（来源 / 可行性 / 冲突点），写入 `docs/research/requirements/<topic>-feasibility.md`
+2. **对抗**：按 `references/adversarial-selection.md` §7 触发规则——2 候选走红队 + 法官，3+ 候选加代言人 + 集成评估师；红队缺陷须基于事实
+3. **法官定案**（product-manager 自任）：写判决书（选谁 / 为什么 / 被淘汰方案一句话理由），存入 `docs/research/requirements/<topic>-adversarial.md`
+4. **单候选**：若该决策仅 1 个可行路径，在 01-requirements 对应 FR 旁注明「唯一可行路径 + 理由」，跳过对抗
+
+对抗结论回写 00/01 对应章节，作为该决策的依据留档。
+
 ### Step 3: 信息完备性自检（落笔前）
 
 ```
@@ -113,8 +126,9 @@ user-invocable: true
 ## 输出
 
 - `docs/00-vision.md` — 产品愿景（status: approved）
-- `docs/01-requirements.md` — 功能需求规格（status: approved，�� FR-NNN 锚点）
+- `docs/01-requirements.md` — 功能需求规格（status: approved，含 FR-NNN 锚点）
 - `docs/CHANGELOG.md` — 文档变更记录（新建模式下首次创建）
+- `docs/research/requirements/<topic>-adversarial.md` — 需求层对抗文档（仅当有 2+ 候选关键决策时产出；单候选不产出）
 
 ## 自检清单（产出后逐项过）
 
@@ -123,6 +137,8 @@ user-invocable: true
 - [ ] 是否主动告知了 AI 能力边界？
 - [ ] 每条 FR 是否有具体的机械验收方法？
 - [ ] 是否有明确的"不做什么"边界？
+- [ ] 有 2+ 候选的关键需求决策是否走了需求层对抗（红队缺陷 + 法官判决书）？
+- [ ] 单候选关键决策是否注明「唯一可行路径 + 理由」？
 - [ ] 所有变更是否已记录到 CHANGELOG？
 
 ## 产品结构参考（v0.2.3 共享）
